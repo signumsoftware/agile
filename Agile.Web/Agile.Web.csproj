@@ -118,9 +118,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ServerAgile.svc.cs">
-      <DependentUpon>ServerAgile.svc</DependentUpon>
-    </Compile>
     <Compile Include="Service References\BingTranslationService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -369,7 +366,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <TypeScriptCompile Include="Scripts\Agile.ts" />
-    <Content Include="ServerAgile.svc" />
     <None Include="Service References\BingTranslationService\configuration91.svcinfo" />
     <None Include="Service References\BingTranslationService\configuration.svcinfo" />
     <None Include="Service References\BingTranslationService\Reference.svcmap">

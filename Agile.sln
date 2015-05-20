@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Load", "Agile.Load\Ag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Web", "Agile.Web\Agile.Web.csproj", "{8DC5845A-3C2A-4EF4-8BEC-F22E8C78FC31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Windows", "Agile.Windows\Agile.Windows.csproj", "{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signum.Entities", "Framework\Signum.Entities\Signum.Entities.csproj", "{F2B51D08-498D-4C9F-8112-9521A7762B02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signum.Windows", "Framework\Signum.Windows\Signum.Windows.csproj", "{76278145-7CCD-4411-9B8A-078708128571}"
@@ -101,16 +99,6 @@ Global
 		{8DC5845A-3C2A-4EF4-8BEC-F22E8C78FC31}.Release|ARM.ActiveCfg = Release|Any CPU
 		{8DC5845A-3C2A-4EF4-8BEC-F22E8C78FC31}.Release|x64.ActiveCfg = Release|Any CPU
 		{8DC5845A-3C2A-4EF4-8BEC-F22E8C78FC31}.Release|x86.ActiveCfg = Release|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Release|ARM.ActiveCfg = Release|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Release|x64.ActiveCfg = Release|Any CPU
-		{3E2B07C2-053F-46BA-BD04-4FD2E51DBA9C}.Release|x86.ActiveCfg = Release|Any CPU
 		{F2B51D08-498D-4C9F-8112-9521A7762B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F2B51D08-498D-4C9F-8112-9521A7762B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2B51D08-498D-4C9F-8112-9521A7762B02}.Debug|ARM.ActiveCfg = Debug|Any CPU
