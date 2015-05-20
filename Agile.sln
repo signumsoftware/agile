@@ -43,8 +43,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{5E6F8423-9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Test.Logic", "Agile.Test.Logic\Agile.Test.Logic.csproj", "{DD5DCF5F-33C8-4242-852E-CD2FA1C0E020}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Test.Windows", "Agile.Test.Windows\Agile.Test.Windows.csproj", "{6E11BC15-1299-4C92-987C-435E0D501F26}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signum.Web.Extensions.Selenium", "Extensions\Signum.Web.Extensions.Selenium\Signum.Web.Extensions.Selenium.csproj", "{18048DCC-7069-4BC1-8BE0-99010C7D9082}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Signum.Windows.Extensions.UIAutomation", "Extensions\Signum.Windows.Extensions.UIAutomation\Signum.Windows.Extensions.UIAutomation.csproj", "{8BEE9C27-E196-4087-A531-128BBB5D0CBF}"
@@ -233,16 +231,6 @@ Global
 		{DD5DCF5F-33C8-4242-852E-CD2FA1C0E020}.Release|ARM.ActiveCfg = Release|Any CPU
 		{DD5DCF5F-33C8-4242-852E-CD2FA1C0E020}.Release|x64.ActiveCfg = Release|Any CPU
 		{DD5DCF5F-33C8-4242-852E-CD2FA1C0E020}.Release|x86.ActiveCfg = Release|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Release|ARM.ActiveCfg = Release|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Release|x64.ActiveCfg = Release|Any CPU
-		{6E11BC15-1299-4C92-987C-435E0D501F26}.Release|x86.ActiveCfg = Release|Any CPU
 		{18048DCC-7069-4BC1-8BE0-99010C7D9082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{18048DCC-7069-4BC1-8BE0-99010C7D9082}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18048DCC-7069-4BC1-8BE0-99010C7D9082}.Debug|ARM.ActiveCfg = Debug|Any CPU
