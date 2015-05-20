@@ -147,7 +147,6 @@ namespace Agile.Web
             MailingClient.Start(
                 newsletter: false, 
                 pop3Config: false);
-            SessionLogClient.Start();
             ExceptionClient.Start();
             UserQueriesClient.Start();
             FilesClient.Start(
@@ -216,7 +215,6 @@ namespace Agile.Web
 
         protected void Session_End(object sender, EventArgs e)
         {
-            SessionLogClient.LogSessionEnd((UserEntity)Session[UserHolder.UserSessionKey], TimeSpan.FromMinutes(Session.Timeout));
         }
 
         protected void Application_ReleaseRequestState(object sender, EventArgs e)

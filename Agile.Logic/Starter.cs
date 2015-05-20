@@ -92,8 +92,6 @@ namespace Agile.Logic
             AuthLogic.StartAllModules(sb, dqm);
             ResetPasswordRequestLogic.Start(sb, dqm);
             UserTicketLogic.Start(sb, dqm);
-            SessionLogLogic.Start(sb, dqm);
-
             ProcessLogic.Start(sb, dqm);
             PackageLogic.Start(sb, dqm, packages: true, packageOperations: true);
 
