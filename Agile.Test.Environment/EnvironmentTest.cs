@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Signum.Engine;
@@ -31,12 +31,7 @@ namespace Agile.Test.Environment
                 AgileEnvironment.LoadBasics();
 
                 AuthLogic.LoadRoles(authRules);
-                AgileEnvironment.LoadEmployees();
                 AgileEnvironment.LoadUsers();
-                AgileEnvironment.LoadProducts(); 
-                AgileEnvironment.LoadCustomers(); 
-                AgileEnvironment.LoadShippers();
-
                 AuthLogic.ImportRulesScript(authRules, interactive: false).PlainSqlCommand().ExecuteLeaves();
             }
 
