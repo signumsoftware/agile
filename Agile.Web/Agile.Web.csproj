@@ -109,9 +109,6 @@
     <Compile Include="Controllers\HomeController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ServerAgileTransfer.svc.cs">
-      <DependentUpon>ServerAgileTransfer.svc</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -385,7 +382,6 @@
     <Content Include="Libs\jquery-1.11.0.min.js" />
     <Content Include="Libs\promise-0.1.1.js" />
     <Content Include="Libs\require.js" />
-    <Content Include="ServerAgileTransfer.svc" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <TypeScriptCompile Include="Scripts\Agile.ts" />

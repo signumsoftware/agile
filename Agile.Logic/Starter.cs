@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -70,9 +70,6 @@ namespace Agile.Logic
             MixinDeclarations.Register<UserEntity, UserEmployeeMixin>();
 
             OverrideAttributes(sb);
-
-            SetupDisconnectedStrategies(sb);
-
             DynamicQueryManager dqm = new DynamicQueryManager();
 
             Connector.Default = new SqlConnector(connectionString, sb.Schema, dqm, SqlServerVersion.SqlServer2012);
@@ -145,12 +142,6 @@ namespace Agile.Logic
             TypeConditionLogic.Register<OrderEntity>(AgileGroup.CurrentCustomer, o => o.Customer == CustomerEntity.Current);
             TypeConditionLogic.Register<PersonEntity>(AgileGroup.CurrentCustomer, o => o == CustomerEntity.Current);
             TypeConditionLogic.Register<CompanyEntity>(AgileGroup.CurrentCustomer, o => o == CustomerEntity.Current);
-
-            DisconnectedLogic.Start(sb, dqm);
-            DisconnectedLogic.BackupFolder = @"D:\AgileTemp\Backups";
-            DisconnectedLogic.BackupNetworkFolder = @"D:\AgileTemp\Backups";
-            DisconnectedLogic.DatabaseFolder = @"D:\AgileTemp\Database";
-
             ProfilerLogic.Start(sb, dqm,
                 timeTracker: true,
                 heavyProfiler: true,

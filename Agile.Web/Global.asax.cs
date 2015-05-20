@@ -164,8 +164,6 @@ namespace Agile.Web
                 excelReport: false);
             WordClient.Start();
             DashboardClient.Start();
-
-            DisconnectedClient.Start();
             ProcessClient.Start(
                 packages: true,
                 packageOperations: true);

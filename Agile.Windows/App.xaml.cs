@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -25,7 +25,6 @@ using Signum.Windows.Chart;
 using Signum.Entities.Authorization;
 using Signum.Windows.UserQueries;
 using Signum.Windows.Disconnected;
-using Agile.Local;
 using Agile.Windows.Properties;
 using System.IO;
 using Signum.Windows.Omnibox;
@@ -130,9 +129,6 @@ namespace Agile.Windows
             OmniboxClient.Register(new DashboardOmniboxProvider());
 
             AgileClient.Start();
-
-            DisconnectedClient.Start();
-
             Navigator.Initialize();
         }
     }
