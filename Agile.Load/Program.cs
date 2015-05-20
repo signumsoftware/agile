@@ -122,7 +122,6 @@ namespace Agile.Load
                     {42, ChartScriptLogic.ImportExportChartScripts},
                     {43, AuthLogic.ImportExportAuthRules},
                     {44, ImportSpanishInstanceTranslations},
-                    {45, HelpXml.ImportExportHelp},
                     {100, ShowOrder},
                 }.ChooseMultiple();
 

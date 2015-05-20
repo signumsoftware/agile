@@ -114,8 +114,6 @@ namespace Agile.Logic
 
             TranslationLogic.Start(sb, dqm);
             TranslatedInstanceLogic.Start(sb, dqm, () => CultureInfo.GetCultureInfo("en"));
-
-            HelpLogic.Start(sb, dqm);
             EmployeeLogic.Start(sb, dqm);
             ProductLogic.Start(sb, dqm);
             CustomerLogic.Start(sb, dqm);

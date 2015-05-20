@@ -170,8 +170,6 @@ namespace Agile.Web
 
             SchedulerClient.Start(simpleTask: true);
             LinksClient.Start(widget: true, contextualItems: true);
-
-            HelpClient.Start("Images", "http://localhost:7654/"); 
             CacheClient.Start();
 
             ProfilerClient.Start();
@@ -196,7 +194,6 @@ namespace Agile.Web
             OmniboxClient.Register(new ChartOmniboxProvider());
             OmniboxClient.Register(new UserChartOmniboxProvider());
             OmniboxClient.Register(new DashboardOmniboxProvider());
-            OmniboxClient.Register(new HelpOmniboxProvider());
             OmniboxClient.Register(new MapOmniboxProvider());
         } //WebStart
 

@@ -108,9 +108,6 @@ namespace Agile.Windows
             UserQueryClient.Start();
             ChartClient.Start();
             DashboardClient.Start();
-
-            HelpClient.Start(); 
-
             ExceptionClient.Start();
             ProfilerClient.Start();
 
