@@ -29,7 +29,6 @@ namespace Agile.Web
     public static class AgileClient
     {
         public static string ViewPrefix = "~/Views/Agile/{0}.cshtml";
-        public static string ThemeSessionKey = "swCurrentTheme";
         public static JsModule ProductModule = new JsModule("Product");
 
         public static void Start()

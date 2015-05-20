@@ -12,23 +12,7 @@
     <title>@ViewBag.Title</title>
 
     @{ 
-        //theme0
-        string currentTheme = (Session == null ? null : (string)Session[AgileClient.ThemeSessionKey]) ?? "bootstrap";
-
-        if (currentTheme == "bootstrap")
-        { //theme1
         @Html.ScriptCss("~/Libs/bootstrap/css/bootstrap.css");
-        } //theme2
-        else if (currentTheme == "bootstrap + theme")
-        {
-        @Html.ScriptCss(
-                "~/Libs/bootstrap/css/bootstrap.css",
-                "~/Libs/bootstrap/css/bootstrap-theme.css");
-        }
-        else
-        {
-        @Html.ScriptCss("~/Libs/bootstrap/themes/{0}.css".FormatWith(currentTheme))
-        } //theme3
     }
 
     @Html.ScriptCss(
@@ -124,26 +108,6 @@
                         } @*UserEntity.Current*@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-
-                        <li class="theme-selector-container">
-                            @{  
-                                var themes = new List<string> 
-            { 
-                "bootstrap", "bootstrap + theme", 
-                "amelia", "cerulean", "cosmo", "cyborg", "darkly", "flatly",
-                "journal", "lumen", "readable", "shamrock", "simplex", "slate",
-                "spacelab", "superhero", "united", "yeti"
-            };
-                
-                                @Html.DropDownList(
-                "themeSelector",
-                themes.Select(s => new SelectListItem { Text = s, Value = s, Selected = currentTheme == s }),
-                new Dictionary<string, object> { 
-                    { "data-url", Url.Action<HomeController>(hc => hc.ChangeTheme()) }, 
-                    {"class", "form-control theme-selector" }   
-                })
-                            }
-                        </li>
                         <li>
                             @{ Html.RenderPartial(AuthClient.LoginUserControlView);}
                         </li>

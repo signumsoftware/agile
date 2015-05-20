@@ -54,10 +54,5 @@ namespace Agile.Web.Controllers
 
             return Redirect(Request.UrlReferrer.ToString());
         } //ChangeLanguage
-        public ActionResult ChangeTheme()
-        {
-            Session[AgileClient.ThemeSessionKey] = Request.Params["themeSelector"];
-            return Redirect(Request.UrlReferrer.ToString());
-        }
     }
 }
