@@ -44,25 +44,7 @@ namespace Agile.Web
                 {
                     Email = new EmailConfigurationEntity()
                 });
-
-                QuerySettings.RegisterPropertyFormat((CategoryEntity e) => e.Picture,
-                    new CellFormatter((html, obj) => obj == null ? null :
-                        new HtmlTag("img")
-                       .Attr("src", Base64Data((EmbeddedFileEntity)obj))
-                      .Attr("alt", obj.ToString())
-                      .Attr("style", "width:48px").ToHtmlSelf()) { TextAlign = "center" }); // Category
-
-                QuerySettings.RegisterPropertyFormat((EmployeeEntity e) => e.Photo,
-                    new CellFormatter((html, obj) => obj == null ? null :
-                      new HtmlTag("img")
-                      .Attr("src", RouteHelper.New().Action((FileController c) => c.Download(new RuntimeInfo((Lite<FileEntity>)obj).ToString())))
-                      .Attr("alt", obj.ToString())
-                      .Attr("style", "width:48px").ToHtmlSelf()) { TextAlign = "center" }); //Emmployee
             }
         }
-        public static string Base64Data(EmbeddedFileEntity file)
-        {
-            return "data:" + MimeType.FromFileName(file.FileName) + ";base64," + Convert.ToBase64String(file.BinaryFile);
-        } //Base64Data
     }
 }
