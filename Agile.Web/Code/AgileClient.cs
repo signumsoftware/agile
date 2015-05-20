@@ -43,7 +43,6 @@ namespace Agile.Web
 
                 Constructor.Register(ctx => new ApplicationConfigurationEntity
                 {
-                    Sms = new SMSConfigurationEntity(),
                     Email = new EmailConfigurationEntity()
                 });
 

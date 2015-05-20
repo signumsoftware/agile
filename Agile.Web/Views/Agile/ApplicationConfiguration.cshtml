@@ -1,4 +1,4 @@
-@using Agile.Entities
+﻿@using Agile.Entities
 
 @using (var tc = Html.TypeContext<ApplicationConfigurationEntity>())
 {
@@ -7,9 +7,5 @@
         <legend>Email</legend>
         @Html.EmbeddedControl(tc, c => c.Email)
         @Html.EntityLine(tc, c => c.SmtpConfiguration)
-    </fieldset>
-    <fieldset id="sms">
-        <legend>SMS</legend>
-        @Html.EmbeddedControl(tc, c => c.Sms)
     </fieldset>
 }

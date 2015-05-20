@@ -115,8 +115,6 @@ namespace Agile.Windows
 
             NoteClient.Start(typeof(UserEntity), /*Note*/typeof(OrderEntity));
             AlertClient.Start(typeof(UserEntity), /*Alert*/typeof(OrderEntity));
-            SMSClient.Start();
-            
             ProfilerClient.Start();
 
             OmniboxClient.Start();

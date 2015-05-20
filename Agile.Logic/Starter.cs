@@ -112,12 +112,6 @@ namespace Agile.Logic
             ViewLogLogic.Start(sb, dqm, new HashSet<Type> { typeof(UserQueryEntity), typeof(UserChartEntity), typeof(DashboardEntity) });
 
             ExceptionLogic.Start(sb, dqm);
-
-            SMSLogic.Start(sb, dqm, null, () => Configuration.Value.Sms);
-            SMSLogic.RegisterPhoneNumberProvider<PersonEntity>(p => p.Phone, p => null);
-            SMSLogic.RegisterDataObjectProvider((PersonEntity p) => new { p.FirstName, p.LastName, p.Title, p.DateOfBirth });
-            SMSLogic.RegisterPhoneNumberProvider<CompanyEntity>(p => p.Phone, p => null);
-
             NoteLogic.Start(sb, dqm, typeof(UserEntity), /*Note*/typeof(OrderEntity));
             AlertLogic.Start(sb, dqm, typeof(UserEntity), /*Alert*/typeof(OrderEntity));
             FileLogic.Start(sb, dqm);

@@ -147,9 +147,6 @@ namespace Agile.Web
             MailingClient.Start(
                 newsletter: false, 
                 pop3Config: false);
-
-            SMSClient.Start();
-
             SessionLogClient.Start();
             ExceptionClient.Start();
             UserQueriesClient.Start();

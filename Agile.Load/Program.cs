@@ -215,10 +215,6 @@ namespace Agile.Load
                             Host = "localhost"
                         }
                     }, //Email
-                    Sms = new SMSConfigurationEntity
-                    {
-                        DefaultCulture = en,
-                    } //Sms
                 }.Save();
 
                 tr.Commit();

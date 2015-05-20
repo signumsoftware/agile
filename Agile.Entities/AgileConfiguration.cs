@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,15 +37,6 @@ namespace Agile.Entities
             get { return smtpConfiguration; }
             set { Set(ref smtpConfiguration, value); }
         }/*Email*/
-
-        [NotNullable]/*Sms*/
-        SMSConfigurationEntity sms;
-        [NotNullValidator]
-        public SMSConfigurationEntity Sms
-        {
-            get { return sms; }
-            set { Set(ref sms, value); }
-        }/*Sms*/
     }
 
     public static class ApplicationConfigurationOperation
