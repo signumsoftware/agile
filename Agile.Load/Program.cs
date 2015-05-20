@@ -103,7 +103,6 @@ namespace Agile.Load
             {
                 CreateCultureInfo,
                 ChartScriptLogic.ImportChartScriptsAuto,
-                ImportSpanishInstanceTranslations,
             }.Run(autoRun); 
         } //CSharpMigrations
 
@@ -119,7 +118,6 @@ namespace Agile.Load
                 {
                     {42, ChartScriptLogic.ImportExportChartScripts},
                     {43, AuthLogic.ImportExportAuthRules},
-                    {44, ImportSpanishInstanceTranslations},
                 }.ChooseMultiple();
 
                 if (actions == null)
@@ -206,11 +204,6 @@ namespace Agile.Load
                 tr.Commit();
             }
 
-        }
-
-        public static void ImportSpanishInstanceTranslations()
-        {
-            TranslatedInstanceLogic.ImportExcelFile("Category.es.View.xlsx");
         }
     }
 }
