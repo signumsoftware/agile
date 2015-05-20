@@ -104,7 +104,6 @@ namespace Agile.Load
                 CreateCultureInfo,
                 ChartScriptLogic.ImportChartScriptsAuto,
                 ImportSpanishInstanceTranslations,
-                ImportWordReportTemplateForOrder, 
             }.Run(autoRun); 
         } //CSharpMigrations
 
@@ -124,7 +123,6 @@ namespace Agile.Load
                     {43, AuthLogic.ImportExportAuthRules},
                     {44, ImportSpanishInstanceTranslations},
                     {45, HelpXml.ImportExportHelp},
-                    {48, ImportWordReportTemplateForOrder},
                     {100, ShowOrder},
                 }.ChooseMultiple();
 
@@ -231,18 +229,6 @@ namespace Agile.Load
         public static void ImportSpanishInstanceTranslations()
         {
             TranslatedInstanceLogic.ImportExcelFile("Category.es.View.xlsx");
-        }
-
-        public static void ImportWordReportTemplateForOrder()
-        {
-            new WordTemplateEntity
-            {
-                Name = "Order template",
-                Query = QueryLogic.GetQueryEntity(typeof(OrderEntity)),
-                Culture = CultureInfo.GetCultureInfo("en").ToCultureInfoEntity(),
-                Template = new FileEntity("../../WordTemplates/Order.docx").ToLiteFat(),
-                FileName = "Order.docx"
-            }.Save();
         }
     }
 }
