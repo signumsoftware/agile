@@ -27,12 +27,9 @@ namespace Agile.Web.Controllers
     [HandleError]
     public class HomeController : Controller
     {
-        [AuthenticationRequired(false)]
+        
         public ActionResult Index()
         {
-            if (UserEntity.Current == null)
-                return RedirectToAction("PublicCatalog");
-
             var panel = DashboardLogic.GetHomePageDashboard();
             if (panel != null)
                 return View(DashboardClient.ViewPrefix.FormatWith("Dashboard"), panel);
@@ -40,7 +37,7 @@ namespace Agile.Web.Controllers
             return View();
         }
 
-        [AuthenticationRequired(false)]
+        
         public ActionResult ChangeLanguage()
         {
             var ci = CultureInfo.GetCultureInfo(Request.Params["culture"]);
@@ -57,14 +54,6 @@ namespace Agile.Web.Controllers
 
             return Redirect(Request.UrlReferrer.ToString());
         } //ChangeLanguage
-
-        [AuthenticationRequired(false)]
-        public ActionResult PublicCatalog()
-        {
-            return View();
-        } //PublicCatalog
-
-        [AuthenticationRequired(false)]
         public ActionResult ChangeTheme()
         {
             Session[AgileClient.ThemeSessionKey] = Request.Params["themeSelector"];

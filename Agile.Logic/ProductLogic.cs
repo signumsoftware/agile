@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,21 +15,11 @@ namespace Agile.Logic
 {
     public static class ProductLogic
     {
-        public static ResetLazy<Dictionary<CategoryEntity, List<ProductEntity>>> ActiveProducts;
-
         public static void Start(SchemaBuilder sb, DynamicQueryManager dqm)
         {
             if (sb.NotDefined(MethodInfo.GetCurrentMethod()))
             {
                 sb.Include<ProductEntity>();
-
-                ActiveProducts = sb.GlobalLazy(() =>
-                    Database.Query<ProductEntity>()
-                    .Where(a => !a.Discontinued)
-                    .Select(p => new { Category = p.Category.Entity, Product = p })
-                    .GroupToDictionary(a => a.Category, a => a.Product),
-                    new InvalidateWith(typeof(ProductEntity)));
-
                 dqm.RegisterQuery(typeof(ProductEntity), () =>
                     from p in Database.Query<ProductEntity>()
                     select new

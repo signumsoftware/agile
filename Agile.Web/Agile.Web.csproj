@@ -468,7 +468,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Views\Agile\ApplicationConfiguration.cshtml" />
-    <Content Include="Views\Home\PublicCatalog.cshtml" />
     <None Include="Service References\BingTranslationService\soap.wsdl" />
     <None Include="Service References\BingTranslationService\soap.xsd">
       <SubType>Designer</SubType>
