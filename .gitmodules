@@ -1,3 +1,6 @@
 [submodule "Extensions"]
 	path = Extensions
 	url = https://github.com/signumsoftware/extensions.git
+[submodule "Framework"]
+	path = Framework
+	url = https://github.com/signumsoftware/framework.git
