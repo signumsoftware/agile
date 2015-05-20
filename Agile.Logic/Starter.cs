@@ -49,6 +49,8 @@ using Signum.Entities.Word;
 using Signum.Engine.Migrations;
 using Signum.Entities.DynamicQuery;
 using System.Net.Mail;
+using Signum.Engine.DiffLog;
+using Signum.Entities.DiffLog;
 
 namespace Agile.Logic
 {
@@ -66,6 +68,7 @@ namespace Agile.Logic
             SchemaBuilder sb = new SchemaBuilder();
             sb.Schema.Version = typeof(Starter).Assembly.GetName().Version;
             sb.Schema.ForceCultureInfo = CultureInfo.GetCultureInfo("en-US");
+            MixinDeclarations.Register<OperationLogEntity, DiffLogMixin>(); 
             OverrideAttributes(sb);
             DynamicQueryManager dqm = new DynamicQueryManager();
 
@@ -105,6 +108,7 @@ namespace Agile.Logic
             DashboardLogic.RegisterUserTypeCondition(sb, AgileGroup.UserEntities);
             DashboardLogic.RegisterRoleTypeCondition(sb, AgileGroup.RoleEntities);
             ViewLogLogic.Start(sb, dqm, new HashSet<Type> { typeof(UserQueryEntity), typeof(UserChartEntity), typeof(DashboardEntity) });
+            DiffLogLogic.Start(sb, dqm);
 
             ExceptionLogic.Start(sb, dqm);
             FileLogic.Start(sb, dqm);
@@ -117,14 +121,36 @@ namespace Agile.Logic
                 heavyProfiler: true,
                 overrideSessionTimeout: true);
 
+            ProjectLogic.Start(sb, dqm);
+            BoardLogic.Start(sb, dqm);
+            CardLogic.Start(sb, dqm);
+            CommentLogic.Start(sb, dqm);
+            TagLogic.Start(sb, dqm);
+            NotificationLogic.Start(sb, dqm);
+
+            TypeConditions();
+
             SetupCache(sb);
 
             SetSchemaNames(Schema.Current);
-
+           
             if (logDatabase.HasText())
                 SetLogDatabase(sb.Schema, new DatabaseName(null, logDatabase));
 
             Schema.Current.OnSchemaCompleted();
+        }
+
+        private static void TypeConditions()
+        {
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (ProjectEntity p) => p.Members.Contains(UserEntity.Current.ToLite()));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (BoardEntity b) => b.Project.Entity.InCondition(AgileGroup.MyProjects));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (ListEntity l) => l.Board.Entity.InCondition(AgileGroup.MyProjects));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (CardEntity c) => c.List.Entity.InCondition(AgileGroup.MyProjects));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (CommentEntity c) => c.Card.Entity.InCondition(AgileGroup.MyProjects));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (TagEntity t) => t.Board.Entity.InCondition(AgileGroup.MyProjects));
+
+            TypeConditionLogic.Register(AgileGroup.UserEntities, (NotificationEntity t) => t.User == UserEntity.Current.ToLite());
+            TypeConditionLogic.Register(AgileGroup.UserEntities, (SubscriptionEntity t) => t.User == UserEntity.Current.ToLite());
         }
 
         private static void SetSchemaNames(Schema schema)

@@ -56,6 +56,14 @@
     <Compile Include="AgileEnvironment.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Agile.Entities\Agile.Entities.csproj">
+      <Project>{1e623d42-bfba-47a2-b36e-cd621f799f12}</Project>
+      <Name>Agile.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Agile.Logic\Agile.Logic.csproj">
+      <Project>{a1dc1e55-a44c-4240-bb6d-a8ff1886ff45}</Project>
+      <Name>Agile.Logic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Extensions\Signum.Engine.Extensions\Signum.Engine.Extensions.csproj">
       <Project>{ba7fa363-61a1-41b1-945b-9b9c7bbcd357}</Project>
       <Name>Signum.Engine.Extensions</Name>
@@ -79,14 +87,6 @@
     <ProjectReference Include="..\Framework\Signum.Utilities\Signum.Utilities.csproj">
       <Project>{f7d3f72d-741d-4f67-8cf8-cd41b9035fed}</Project>
       <Name>Signum.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Agile.Entities\Agile.Entities.csproj">
-      <Project>{2fe283cc-8f34-451e-9805-c7858f7d705d}</Project>
-      <Name>Agile.Entities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Agile.Logic\Agile.Logic.csproj">
-      <Project>{2da0d6c7-53db-45f3-ba86-f4fdeb6924fa}</Project>
-      <Name>Agile.Logic</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

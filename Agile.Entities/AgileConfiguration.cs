@@ -37,6 +37,37 @@ namespace Agile.Entities
             get { return smtpConfiguration; }
             set { Set(ref smtpConfiguration, value); }
         }/*Email*/
+
+        [NotNullable, PreserveOrder]
+        MList<AttachmentRepositoryEntity> repositories = new MList<AttachmentRepositoryEntity>();
+        [NotNullValidator, NoRepeatValidator]
+        public MList<AttachmentRepositoryEntity> Repositories
+        {
+            get { return repositories; }
+            set { Set(ref repositories, value); }
+        }
+    }
+
+    [Serializable]
+    public class AttachmentRepositoryEntity : EmbeddedEntity
+    {
+        [NotNullable, SqlDbType(Size = 300)]
+        string physicalPrefix;
+        [StringLengthValidator(AllowNulls = false, Min = 3, Max = 300), FileNameValidator]
+        public string PhysicalPrefix
+        {
+            get { return physicalPrefix; }
+            set { Set(ref physicalPrefix, value); }
+        }
+
+        [NotNullable, SqlDbType(Size = 100)]
+        string webPrefix;
+        [StringLengthValidator(AllowNulls = false, Min = 3, Max = 100)]
+        public string WebPrefix
+        {
+            get { return webPrefix; }
+            set { Set(ref webPrefix, value); }
+        }
     }
 
     public static class ApplicationConfigurationOperation
@@ -48,6 +79,6 @@ namespace Agile.Entities
     {
         public static TypeConditionSymbol UserEntities = new TypeConditionSymbol();
         public static TypeConditionSymbol RoleEntities = new TypeConditionSymbol();
-        public static TypeConditionSymbol CurrentCustomer = new TypeConditionSymbol();
+        public static TypeConditionSymbol MyProjects = new TypeConditionSymbol();
     }
 }

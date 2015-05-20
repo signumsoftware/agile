@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Auth>
+  <Imported On="2014-11-11T14:33:13" />
+  <Exported On="2015-03-05T20:20:31" />
+  <Roles>
+    <Role Name="Super user" MergeStrategy="Intersection" Contains="" />
+    <Role Name="User" Contains="" />
+    <Role Name="Advanced user" Contains="User" />
+  </Roles>
+  <Operations>
+    <Role Name="Super user" />
+    <Role Name="User" />
+    <Role Name="Advanced user" />
+  </Operations>
+  <Permissions>
+    <Role Name="Super user" />
+    <Role Name="User">
+      <Permission Resource="BasicPermission.AutomaticUpgradeOfOperations" Allowed="True" />
+      <Permission Resource="BasicPermission.AutomaticUpgradeOfProperties" Allowed="True" />
+      <Permission Resource="BasicPermission.AutomaticUpgradeOfQueries" Allowed="True" />
+    </Role>
+    <Role Name="Advanced user" />
+  </Permissions>
+  <Properties>
+    <Role Name="Super user" />
+    <Role Name="User" />
+    <Role Name="Advanced user" />
+  </Properties>
+  <Queries>
+    <Role Name="Super user" />
+    <Role Name="User" />
+    <Role Name="Advanced user" />
+  </Queries>
+  <Types>
+    <Role Name="Super user" />
+    <Role Name="User">
+    </Role>
+    <Role Name="Advanced user">
+    </Role>
+  </Types>
+</Auth>
