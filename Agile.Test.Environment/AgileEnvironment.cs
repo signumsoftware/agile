@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -75,9 +75,6 @@ namespace Agile.Test.Environment
                 Role = role,
                 State = UserState.Saved,
             };
-
-            user.SetMixin((UserEmployeeMixin e) => e.Employee, Database.Query<EmployeeEntity>().Single(e => e.FirstName == userName));
-
             user.Save();
         }//LoadUsers
 

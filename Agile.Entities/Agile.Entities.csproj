@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AgileConfiguration.cs" />
-    <Compile Include="UserEmployeeMixin.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Extensions\Signum.Entities.Extensions\Signum.Entities.Extensions.csproj">

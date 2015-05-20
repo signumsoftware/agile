@@ -117,8 +117,6 @@ namespace Agile.Load
             {
                 Action[] actions = new ConsoleSwitch<int, Action>
                 {
-                    {20, EmployeeLoader.CreateUsers },
-                    {21, CreateSystemUser },
                     {42, ChartScriptLogic.ImportExportChartScripts},
                     {43, AuthLogic.ImportExportAuthRules},
                     {44, ImportSpanishInstanceTranslations},

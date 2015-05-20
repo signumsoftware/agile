@@ -66,9 +66,6 @@ namespace Agile.Logic
             SchemaBuilder sb = new SchemaBuilder();
             sb.Schema.Version = typeof(Starter).Assembly.GetName().Version;
             sb.Schema.ForceCultureInfo = CultureInfo.GetCultureInfo("en-US");
-
-            MixinDeclarations.Register<UserEntity, UserEmployeeMixin>();
-
             OverrideAttributes(sb);
             DynamicQueryManager dqm = new DynamicQueryManager();
 

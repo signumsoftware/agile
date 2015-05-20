@@ -106,16 +106,6 @@ namespace Agile.Web
             SchedulerLogic.StartScheduledTasks();
 
             RegisterRoutes(RouteTable.Routes);
-
-            AuthLogic.UserLogingIn += user =>
-            {
-                AllowLogin required = ScopeSessionFactory.IsOverriden ? AllowLogin.WindowsOnly : AllowLogin.WebOnly;
-
-                AllowLogin current = user.Mixin<UserEmployeeMixin>().AllowLogin; 
-
-                if (current != AllowLogin.WindowsAndWeb && current != required)
-                    throw new UnauthorizedAccessException("User {0} is {1}".FormatWith(user, current.NiceToString()));
-            }; //UserLogingIn
         }
 
         private void WebStart()
@@ -132,11 +122,6 @@ namespace Agile.Web
                 queries: true, 
                 resetPassword: true, 
                 passwordExpiration: false);
-
-            Navigator.EntitySettings<UserEntity>().CreateViewOverrides()
-                .AfterLine((UserEntity u) => u.Role, (html, tc) => html.ValueLine(tc, u => u.Mixin<UserEmployeeMixin>().AllowLogin))
-                .AfterLine((UserEntity u) => u.Role, (html, tc) => html.EntityLine(tc, u => u.Mixin<UserEmployeeMixin>().Employee));
-
             AuthAdminClient.Start(
                 types: true, 
                 properties: true,
