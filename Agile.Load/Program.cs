@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -101,19 +101,6 @@ namespace Agile.Load
 
             new CSharpMigrationRunner
             {
-                EmployeeLoader.LoadRegions,
-                EmployeeLoader.LoadTerritories,
-                EmployeeLoader.LoadEmployees,
-                ProductLoader.LoadSuppliers,
-                ProductLoader.LoadCategories,
-                ProductLoader.LoadProducts,
-                CustomerLoader.LoadCompanies,
-                CustomerLoader.LoadPersons,
-                OrderLoader.LoadShippers,
-                OrderLoader.LoadOrders,
-                EmployeeLoader.CreateUsers,
-                CreateSystemUser, 
-                OrderLoader.UpdateOrdersDate,
                 CreateCultureInfo,
                 ChartScriptLogic.ImportChartScriptsAuto,
                 ImportSpanishInstanceTranslations,
@@ -133,7 +120,6 @@ namespace Agile.Load
                 {
                     {20, EmployeeLoader.CreateUsers },
                     {21, CreateSystemUser },
-                    {30, OrderLoader.UpdateOrdersDate },
                     {42, ChartScriptLogic.ImportExportChartScripts},
                     {43, AuthLogic.ImportExportAuthRules},
                     {44, ImportSpanishInstanceTranslations},
