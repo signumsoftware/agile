@@ -171,7 +171,6 @@ namespace Agile.Web
             SchedulerClient.Start(simpleTask: true);
 
             NoteClient.Start(typeof(UserEntity), /*Note*/typeof(OrderEntity));
-            AlertClient.Start(typeof(UserEntity), /*Alert*/typeof(OrderEntity));
             LinksClient.Start(widget: true, contextualItems: true);
 
             HelpClient.Start("Images", "http://localhost:7654/"); 
