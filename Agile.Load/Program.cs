@@ -122,7 +122,6 @@ namespace Agile.Load
                     {42, ChartScriptLogic.ImportExportChartScripts},
                     {43, AuthLogic.ImportExportAuthRules},
                     {44, ImportSpanishInstanceTranslations},
-                    {100, ShowOrder},
                 }.ChooseMultiple();
 
                 if (actions == null)
@@ -163,16 +162,6 @@ namespace Agile.Load
 
             command.OpenSqlFileRetry();
         }
-
-        static void ShowOrder()
-        {
-            var query = Database.Query<OrderEntity>()
-              .Where(a => a.Details.Any(l => l.Discount != 0))
-              .OrderByDescending(a => a.TotalPrice);
-
-            OrderEntity order = query.First();
-        }//ShowOrder
-
         internal static void CreateSystemUser()
         {
             using (OperationLogic.AllowSave<UserEntity>())

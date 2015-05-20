@@ -114,20 +114,7 @@ namespace Agile.Logic
 
             TranslationLogic.Start(sb, dqm);
             TranslatedInstanceLogic.Start(sb, dqm, () => CultureInfo.GetCultureInfo("en"));
-            EmployeeLogic.Start(sb, dqm);
-            ProductLogic.Start(sb, dqm);
-            CustomerLogic.Start(sb, dqm);
-            OrderLogic.Start(sb, dqm);
-            ShipperLogic.Start(sb, dqm);
-
             StartAgileConfiguration(sb, dqm);
-
-            TypeConditionLogic.Register<OrderEntity>(AgileGroup.UserEntities, o => o.Employee.RefersTo(EmployeeEntity.Current));
-            TypeConditionLogic.Register<EmployeeEntity>(AgileGroup.UserEntities, e => e == EmployeeEntity.Current);
-
-            TypeConditionLogic.Register<OrderEntity>(AgileGroup.CurrentCustomer, o => o.Customer == CustomerEntity.Current);
-            TypeConditionLogic.Register<PersonEntity>(AgileGroup.CurrentCustomer, o => o == CustomerEntity.Current);
-            TypeConditionLogic.Register<CompanyEntity>(AgileGroup.CurrentCustomer, o => o == CustomerEntity.Current);
             ProfilerLogic.Start(sb, dqm,
                 timeTracker: true,
                 heavyProfiler: true,
@@ -243,7 +230,6 @@ namespace Agile.Logic
 
         private static void SetupCache(SchemaBuilder sb)
         {
-            CacheLogic.CacheTable<ShipperEntity>(sb);
         }
 
         public static void SetLogDatabase(Schema schema, DatabaseName logDatabaseName)
