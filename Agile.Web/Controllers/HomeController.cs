@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -70,82 +70,5 @@ namespace Agile.Web.Controllers
             Session[AgileClient.ThemeSessionKey] = Request.Params["themeSelector"];
             return Redirect(Request.UrlReferrer.ToString());
         }
-
-        public ContentResult UpdateOrders() //To move orders to the present
-        {
-            int removed = Database.Query<OrderEntity>().Where(a => a.Id > 11077).UnsafeDelete(); 
-
-            DateTime time = Database.Query<OrderEntity>().Max(a => a.OrderDate);
-
-            var now = TimeZoneManager.Now;
-            var ts = (int)(now - time).TotalDays;
-
-            int updated = Database.Query<OrderEntity>().UnsafeUpdate()
-                .Set(o => o.OrderDate, o => o.OrderDate.AddDays(ts))
-                .Set(o => o.ShippedDate, o => o.ShippedDate.Value.AddDays(ts))
-                .Set(o => o.RequiredDate, o => o.RequiredDate.AddDays(ts))
-                .Set(o => o.CancelationDate, o => null)
-                .Execute();
-
-            return Content("Removed: {0}\r\nUpdated: {1}".FormatWith(removed, updated)); 
-        }
-
-        public ActionResult CreateOrderFromProducts()
-        {
-            Lite<CustomerEntity> customer = this.TryParseLite<CustomerEntity>("customer");
-
-            var products = this.ParseLiteKeys<ProductEntity>(); 
-
-            var order = OperationLogic.ConstructFromMany(products, OrderOperation.CreateOrderFromProducts, customer);
-
-            return this.DefaultConstructResult(order);
-        }
-
-        public ActionResult ShipOrder()
-        {
-            MappingContext<OrderEntity> ctx = this.ExtractEntity<OrderEntity>().ApplyChanges(this);
-
-            if (ctx.HasErrors())
-                return ctx.ToJsonModelState();
-
-            var shipDate = this.ParseValue<DateTime>("shipDate");
-
-            try
-            {
-                ctx.Value.Execute(OrderOperation.Ship, shipDate);
-            }
-            catch (IntegrityCheckException e)
-            {
-                ctx.ImportErrors(e.Errors);
-
-                return ctx.ToJsonModelState();
-            }
-
-            return this.DefaultExecuteResult(ctx.Value);
-        }
-
-        [HttpPost]
-        public ActionResult OrderFilterFilters()
-        {
-            var ctx = new OrderFilterModel().ApplyChanges(this, this.Prefix()).Validate();
-
-            if (ctx.HasErrors())
-                return ctx.ToJsonModelState();
-
-            List<FilterOption> filters = new List<FilterOption>();
-            if (ctx.Value.Customer != null)
-                filters.Add(new FilterOption("Customer", ctx.Value.Customer));
-            
-            if (ctx.Value.Employee != null)
-                filters.Add(new FilterOption("Employee", ctx.Value.Employee));
-
-            if (ctx.Value.MinOrderDate != null)
-                filters.Add(new FilterOption("OrderDate", ctx.Value.MinOrderDate) { Operation = FilterOperation.GreaterThanOrEqual });
-
-            if (ctx.Value.MaxOrderDate != null)
-                filters.Add(new FilterOption("OrderDate", ctx.Value.MaxOrderDate) { Operation = FilterOperation.LessThan });
-
-            return Finder.SimpleFilterBuilderResult(this, filters);
-        }//ShipOrder
     }
 }

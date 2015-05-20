@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -182,9 +182,6 @@ namespace Agile.Web
             LinksClient.Start(widget: true, contextualItems: true);
 
             HelpClient.Start("Images", "http://localhost:7654/"); 
-
-            AgileClient.Start();
-
             CacheClient.Start();
 
             ProfilerClient.Start();

@@ -1,4 +1,4 @@
-@using Agile.Entities
+﻿@using Agile.Entities
 @using Signum.Entities.Authorization
 @using Signum.Entities.Basics
 @using Signum.Entities.Excel
@@ -7,71 +7,6 @@
 @using Signum.Entities.Chart
 @using Signum.Web.Omnibox
 @Html.WebMenu(
-new WebMenuItem //Agile
-{
-    Text = "Agile",
-    Children = 
-    {
-        new WebMenuItem  //Catalog
-        {
-            Text = "Catalog",
-            Children = 
-            { new WebMenuItem 
-                {
-                    Text = "Public Catalog",
-                    Link = Url.Action((Agile.Web.Controllers.HomeController a)=>a.PublicCatalog())    
-                }
-            }
-        }, //Catalog
-        
-        new WebMenuItem 
-        {
-            Text = typeof(OrderEntity).NicePluralName(),
-            
-            Children = 
-            {
-                new WebMenuItem { Link = new FindOptions(typeof(OrderEntity)) },
-                new WebMenuItem { Link = new FindOptions(OrderQuery.OrderLines) },
-            }
-        },
-        
-         new WebMenuItem 
-         {
-             Text = typeof(CustomerEntity).NicePluralName(),
-             
-             Children = 
-             {
-                new WebMenuItem { Link = new FindOptions(typeof(CustomerEntity)) },
-                new WebMenuItem { Link = new FindOptions(typeof(PersonEntity)) },
-                new WebMenuItem { Link = new FindOptions(typeof(CompanyEntity)) }
-             }
-         },
-         
-         new WebMenuItem 
-         {
-              Text = typeof(ProductEntity).NicePluralName(),
-              Children = 
-              {
-                  new WebMenuItem { Link = new FindOptions(typeof(ProductEntity)) },
-                  new WebMenuItem { Link = new FindOptions(typeof(CategoryEntity)) },
-                  new WebMenuItem { Link = new FindOptions(typeof(SupplierEntity)) },
-              }
-        
-         },
-        
-         
-         new WebMenuItem 
-         {
-              Text = typeof(EmployeeEntity).NicePluralName(),
-              Children = 
-              {
-                  new WebMenuItem { Link = new FindOptions(typeof(EmployeeEntity)) },
-                  new WebMenuItem { Link = new FindOptions(typeof(TerritoryEntity)) },
-                  new WebMenuItem { Link = new FindOptions(typeof(RegionEntity)) },
-              }
-         }
-    },
-}, //Agile
 new WebMenuItem
 {
     Text = "Admin",

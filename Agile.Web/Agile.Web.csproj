@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
+    <ProductVersion></ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8DC5845A-3C2A-4EF4-8BEC-F22E8C78FC31}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -16,10 +15,8 @@
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <FileUpgradeFlags></FileUpgradeFlags>
+    <UpgradeBackupLocation></UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -144,8 +141,6 @@
     <Content Include="Service References\BingTranslationService\Agile.Web.BingTranslationService.TranslateArrayResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <Content Include="Views\Agile\OrderFilter.cshtml" />
-    <TypeScriptCompile Include="Scripts\Order.ts" />
     <Content Include="Libs\bootstrap-colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="Libs\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css" />
     <Content Include="Libs\bootstrap-colorpicker\img\bootstrap-colorpicker\alpha-horizontal.png" />
@@ -390,7 +385,6 @@
     <Content Include="Libs\jquery-1.11.0.min.js" />
     <Content Include="Libs\promise-0.1.1.js" />
     <Content Include="Libs\require.js" />
-    <TypeScriptCompile Include="Scripts\Product.ts" />
     <Content Include="ServerAgileTransfer.svc" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -473,19 +467,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Views\Agile\Address.cshtml" />
-    <Content Include="Views\Agile\Category.cshtml" />
-    <Content Include="Views\Agile\Company.cshtml" />
-    <Content Include="Views\Agile\Employee.cshtml" />
-    <Content Include="Views\Agile\Order.cshtml" />
-    <Content Include="Views\Agile\OrderDetails.cshtml" />
-    <Content Include="Views\Agile\Person.cshtml" />
-    <Content Include="Views\Agile\Product.cshtml" />
-    <Content Include="Views\Agile\Region.cshtml" />
-    <Content Include="Views\Agile\Shipper.cshtml" />
-    <Content Include="Views\Agile\Supplier.cshtml" />
     <Content Include="Views\Agile\ApplicationConfiguration.cshtml" />
-    <Content Include="Views\Agile\Territory.cshtml" />
     <Content Include="Views\Home\PublicCatalog.cshtml" />
     <None Include="Service References\BingTranslationService\soap.wsdl" />
     <None Include="Service References\BingTranslationService\soap.xsd">
@@ -545,8 +527,7 @@
           <IISUrl>http://localhost:7654/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl></CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
