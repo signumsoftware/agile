@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<File>
+  <Modules>
+    <Module Name="ExampleEntities">
+      <RemoveFiles Path="Agile.Entities\Address.cs"/>
+      <RemoveFiles Path="Agile.Entities\Customer.cs"/>
+      <RemoveFiles Path="Agile.Entities\Employee.cs"/>
+      <RemoveFiles Path="Agile.Entities\Order.cs"/>
+      <RemoveFiles Path="Agile.Entities\Product.cs"/>
+      
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{100, ShowOrder},"/>
+      <RemoveLine Path="Agile.Load\Program.cs" From="static void ShowOrder()" To="}//ShowOrder"/>
+      
+      <RemoveFiles Path="Agile.Logic\CustomerLogic.cs"/>
+      <RemoveFiles Path="Agile.Logic\EmployeeLogic.cs"/>
+      <RemoveFiles Path="Agile.Logic\OrderLogic.cs"/>
+      <RemoveFiles Path="Agile.Logic\ProductLogic.cs"/>
+      <RemoveFiles Path="Agile.Logic\ShipperLogic.cs"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="EmployeeLogic.Start(sb, dqm);" To="ShipperLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" 
+                  From="TypeConditionLogic.Register&lt;OrderEntity>(AgileGroup.UserEntities, o => o.Employee.RefersTo(EmployeeEntity.Current));" 
+                  To="TypeConditionLogic.Register&lt;CompanyEntity>(AgileGroup.CurrentCustomer, o => o == CustomerEntity.Current);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="CacheLogic.CacheTable&lt;ShipperEntity>(sb);"/>
+
+     
+    </Module>
+    
+    <Module Name="Windows">
+      <RemoveFiles Path="Agile.Windows"/>
+      <RemoveFiles Path="Agile.Entities\IServerAgile.cs"/>
+      <RemoveFiles Path="Agile.Web\ServerAgile.svc"/>
+      <RemoveFiles Path="Agile.Web\ServerAgile.svc.cs"/>
+      <RemoveLine Path="Agile.Web\Web.config" From="&lt;wsHttpBinding&gt;" To="&lt;/wsHttpBinding>"/>
+      <RemoveLine Path="Agile.Web\Web.config" From="&lt;services>" To="&lt;/services>"/>
+      <RemoveLine Path="Agile.Web\Web.config" From="&lt;behaviors>" To="&lt;/behaviors>"/>
+      <RemoveLine Path="Agile.Web\Web.config" From="&lt;!--Uncomment to trace WCF info -->" To="&lt;/system.diagnostics&gt;--&gt;"/>
+
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Windows\App.xaml.cs" Line="using Agile.Windows.Controls;"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Windows\Code\AgileClient.cs" Line="using Agile.Windows.Controls;"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Windows\Code\AgileClient.cs"
+                  From="new EntitySettings&lt;EmployeeEntity>() { View = e => new Employee()},"
+                  To="new EntitySettings&lt;OrderEntity>() { View = e => new Order()},"/>
+      <RemoveLine DependsOn="ExampleEntities"
+                  Path="Agile.Windows\Code\AgileClient.cs"
+                  From="Constructor.Register(ctx => new EmployeeEntity { Address = new AddressEntity() });"
+                  To="//NotDefined"/>
+      <RemoveFiles DependsOn="ExampleEntities"
+                   Path="Agile.Windows\Controls"/>
+      <RemoveLine DependsOn="ExampleEntities"
+                  Path="Agile.Windows\Main.xaml"
+                  From="&lt;MenuItem Header=&quot;{m:LocTypePlural {x:Type d:OrderEntity}}&quot;>"
+                  To="&lt;!--Admin-->"/>
+    </Module>
+
+    <Module Name="ExampleWeb" DependsOn="ExampleEntities" >
+      <RemoveLine Path="Agile.Web\Code\AgileClient.cs" Line="public static JsModule OrderModule = new JsModule(&quot;Order&quot;);"/>
+      <RemoveLine Path="Agile.Web\Code\AgileClient.cs" 
+                  From="new EmbeddedEntitySettings&lt;AddressEntity>() { PartialViewName = e => ViewPrefix.FormatWith(&quot;Address&quot;) },"
+                  To="new EmbeddedEntitySettings&lt;OrderFilterModel>(),"/>
+      <RemoveLine Path="Agile.Web\Code\AgileClient.cs"
+                  From="Finder.AddQuerySetting(new QuerySettings(OrderQuery.OrderSimple)"
+                  To="RegisterQuickLinks();"/>
+      <RemoveLine Path="Agile.Web\Code\AgileClient.cs"
+                  From="private static ValueLineBoxOptions GetValueLineOptions(string prefix)"
+                  To="} //RegisterQuickLinks"/>
+      <RemoveFiles Path="Agile.Web\Scripts\Order.ts"/>
+      <RemoveFiles Path="Agile.Web\Scripts\Order.js"/>
+      <RemoveFiles Path="Agile.Web\Scripts\Product.ts"/>
+      <RemoveFiles Path="Agile.Web\Scripts\Product.js"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Address.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Category.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Company.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Employee.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Order.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\OrderDetails.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Person.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Product.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Region.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Shipper.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Supplier.cshtml"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\Territory.cshtml"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" From="new WebMenuItem //Agile" To="}, //Agile"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="AgileClient.Start();"/>
+      <RemoveLine Path="Agile.Web\Controllers\HomeController.cs" 
+                  From="public ContentResult UpdateOrders() //To move orders to the present" 
+                  To="}//ShipOrder"/>
+      <RemoveFiles Path="Agile.Web\Views\Agile\OrderFilter.cshtml"/>
+    </Module>
+
+    <Module Name="Disconnected" DependsOn="Windows">
+      <RemoveFiles Path="Agile.Local"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="DisconnectedLogic.Start(sb, dqm);" To="DisconnectedLogic.DatabaseFolder = @&quot;D:\AgileTemp\Database&quot;;"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="SetupDisconnectedStrategies(sb);"/>
+      <RemoveFiles Path="Agile.Logic\Starter.Disconnected.cs"/>
+      <RemoveLine Path="Agile.Logic\Starter.Disconnected.cs" DependsOn="ExampleEntities"
+                  From="Expression&lt;Func&lt;OperationLogEntity, bool>> operationLogCondition = ol =>"
+                  To="DisconnectedLogic.Register&lt;OperationLogEntity>(operationLogCondition, Upload.New);"/>
+      <RemoveLine Path="Agile.Logic\Starter.Disconnected.cs" DependsOn="ExampleEntities"
+                  From="DisconnectedLogic.Register&lt;ExceptionEntity>(e => Database.Query&lt;OperationLogEntity>()"
+                  To=".Any(ol => operationLogCondition.Evaluate(ol) &amp;&amp; ol.Exception.RefersTo(e)), Upload.New);"/>
+      <RemoveLine Path="Agile.Logic\Starter.Disconnected.cs" DependsOn="ExampleEntities"
+            From="DisconnectedLogic.Register&lt;EmployeeEntity>(Download.All, Upload.None);"
+            To="DisconnectedLogic.Register&lt;ShipperEntity>(Download.All, Upload.None);" />
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="DisconnectedClient.Start();"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" Line="using Agile.Local;"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="public enum StartOption" To="}"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="if (RunLocally())" To="else //Run remotely"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="if (!Server.OfflineMode)" To="}"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="if (Server.OfflineMode)" To="LocalServer.Stop();"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="private static bool RunLocally()" To="}//RunLocally"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="private static void UploadIfNecessary()" To="}//UploadIfNecessary"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="using Agile.Local;"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="DisconnectedClient.Start();"/>
+      <RemoveFiles Path="Agile.Web\ServerAgileTransfer.svc"/>
+      <RemoveFiles Path="Agile.Web\ServerAgileTransfer.svc.cs"/>
+      <RemoveLine Path="Agile.Web\Web.config" Line="&lt;binding name=&quot;TransferBinding&quot; maxReceivedMessageSize=&quot;10067108864&quot; transferMode=&quot;Streamed&quot; messageEncoding=&quot;Mtom&quot;/>"/>
+      <RemoveLine Path="Agile.Web\Web.config" From="&lt;service name=&quot;Agile.Web.ServerAgileTransfer&quot; behaviorConfiguration=&quot;TransferBehavior&quot;&gt;" To="&lt;/service&gt;"/>
+      <RemoveLine Path="Agile.Web\Web.config" From="&lt;behavior name=&quot;TransferBehavior&quot;&gt;" To="&lt;/behavior&gt;"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml" From="&lt;MenuItem Header=&quot;Disconnected&quot; x:Name=&quot;miDisconnected&quot;>" To="&lt;/MenuItem>"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml.cs" From="if (Server.OfflineMode)" To="} //OfflineMode"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml.cs" From="private void miDownload_Click(object sender, RoutedEventArgs e)" To="} //Disconnected"/>
+    </Module>
+
+    <Module Name="Migrations">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="MigrationLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Load\Program.cs" From="if (args.Any())" To="} //if(args.Any())"/>
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{&quot;SQL&quot;, SqlMigrationRunner.SqlMigrations},"/>
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{&quot;CS&quot;, () => CSharpMigrations(false), &quot;C# Migrations&quot;},"/>
+      <RemoveLine Path="Agile.Load\Program.cs" From="private static void CSharpMigrations(bool autoRun)" To="} //CSharpMigrations"/>
+
+    </Module>
+
+    <Module Name="LoadNorthwind" DependsOn="ExampleEntities,Migrations">	  
+	    <RemoveLine Path="Agile.Load\Program.cs" From="EmployeeLoader.LoadRegions," To="OrderLoader.UpdateOrdersDate,"/>
+	    <RemoveLine Path="Agile.Load\Program.cs" Line="{30, OrderLoader.UpdateOrdersDate },"/>
+      <RemoveFiles Path="Agile.Load\CustomerLoader.cs"/>
+      <RemoveFiles Path="Agile.Load\EmployeeLoader.cs"/>
+      <RemoveFiles Path="Agile.Load\Northwind.dbml"/>
+      <RemoveFiles Path="Agile.Load\Northwind.dbml.layout"/>
+      <RemoveFiles Path="Agile.Load\Northwind.designer.cs"/>
+      <RemoveFiles Path="Agile.Load\NorthwindPartials.cs"/>
+      <RemoveFiles Path="Agile.Load\OrderLoader.cs"/>
+      <RemoveFiles Path="Agile.Load\ProductLoader.cs"/>
+      <RemoveFiles Path="Agile.Load\SupplierFaxes.csv"/>
+    </Module>
+
+    <Module Name="UserQuery">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((UserQueryEntity uq) => uq.Owner).Replace(new ImplementedByAttribute(typeof(UserEntity), typeof(RoleEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="UserQueryLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="UserQueryLogic.RegisterUserTypeCondition(sb, AgileGroup.UserEntities);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="UserQueryLogic.RegisterRoleTypeCondition(sb, AgileGroup.RoleEntities);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="UserQueriesClient.Start();"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="UserQueryClient.Start();"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" Line="new WebMenuItem { Link = new FindOptions(typeof(UserQueryEntity)) },"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml" Line="&lt;MenuItem Tag=&quot;{m:Explore QueryName={x:Type seu:UserQueryEntity}}&quot;/>"/>
+    </Module>
+
+    <Module Name="Word">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="WordTemplateLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="WordClient.Start();"/>
+      <RemoveLine DependsOn="ExampleEntities,!Migrations" Path="Agile.Load\Program.cs" Line="{48, ImportWordReportTemplateForOrder},"/>
+      <RemoveLine DependsOn="ExampleEntities,Migrations" Path="Agile.Load\Program.cs" Line="ImportWordReportTemplateForOrder,"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Load\Program.cs" From="public static void ImportWordReportTemplateForOrder()" To="}"/>
+      <RemoveFiles DependsOn="ExampleEntities" Path="Agile.Load\WordTemplates\Order.docx"/>
+    </Module>
+
+    <Module Name="Chart" DependsOn="Files">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((UserChartEntity uc) => uc.Owner).Replace(new ImplementedByAttribute(typeof(UserEntity), typeof(RoleEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="ChartLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="UserChartLogic.RegisterUserTypeCondition(sb, AgileGroup.UserEntities);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="UserChartLogic.RegisterRoleTypeCondition(sb, AgileGroup.RoleEntities);"/>
+      <RemoveFiles Path="Agile.Web\Libs\CodeMirror\"/>
+      <RemoveFiles Path="Agile.Web\Libs\d3.v3.min.js"/>
+      <RemoveFiles Path="Agile.Web\Libs\colorbrewer.js"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="ChartClient.Start();"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="ChartClient.Start();"/>
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{42, ChartScriptLogic.ImportExportChartScripts},"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" Line="new WebMenuItem { Link = new FindOptions(typeof(UserChartEntity)) },"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" Line="new WebMenuItem { Link = new FindOptions(typeof(ChartScriptEntity)) },"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml" Line="&lt;MenuItem Tag=&quot;{m:Explore QueryName={x:Type sec:UserChartEntity}}&quot;/>"/>
+    </Module>
+
+    <Module Name="Files">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="FilePathLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="FileLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="FilesClient.Start(" To="embeddedFile: true);"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="FilePathClient.Start();"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Entities\Employee.cs" From="Lite&lt;FileEntity&gt; photo;" To="}"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Entities\Product.cs" From="EmbeddedFileEntity picture;" To="}"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Load\EmployeeLoader.cs" Line="Photo = new FileEntity { FileName = e.PhotoPath.AfterLast('/'), BinaryFile = RemoveOlePrefix(e.Photo.ToArray()) }.ToLiteFat(),"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Load\EmployeeLoader.cs" From="public static byte[] RemoveOlePrefix(byte[] bytes)" To="} //RemoveOlePrefix"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Load\ProductLoader.cs" Line="Picture = new EmbeddedFileEntity { FileName = s.CategoryName + &quot;.jpg&quot;, BinaryFile = EmployeeLoader.RemoveOlePrefix(s.Picture.ToArray()) },"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Logic\ProductLogic.cs" Line="s.Picture"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Logic\EmployeeLogic.cs" Line="e.Photo, //1"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Logic\EmployeeLogic.cs" Line="e.Photo, //2"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Web\Code\AgileClient.cs" From="QuerySettings.RegisterPropertyFormat((CategoryEntity e) => e.Picture," To=".Attr(&quot;style&quot;, &quot;width:48px&quot;).ToHtmlSelf()) { TextAlign = &quot;center&quot; }); //Emmployee"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Web\Code\AgileClient.cs" From="public static string Base64Data(EmbeddedFileEntity file)" To="} //Base64Data"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Web\Views\Agile\Category.cshtml" From="@Html.FileLine(cc, a => a.Picture)" To="} @*Picture*@"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Web\Views\Agile\Employee.cshtml" From="@Html.FileLine(ec, a => a.Photo.Try(p => p.Retrieve()))" To="} @*Photo*@"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Windows\Code\AgileClient.cs" From="QuerySettings.RegisterPropertyFormat((EmployeeEntity e) => e.Photo, b =>" To="}); //Picture"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Windows\Controls\Category.xaml" From="&lt;f:FileLine m:Common.Route=&quot;Picture&quot; />" To="&lt;/Border>"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Windows\Controls\Employee.xaml" From="&lt;StackPanel  Grid.Column=&quot;1&quot; Grid.Row=&quot;0&quot;>" To="&lt;/StackPanel>"/>
+      <RemoveFiles DependsOn="ExampleEntities" Path="Agile.Windows\AgileConverters.cs"/>
+    </Module>
+
+    <Module Name="Excel">
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="ExcelClient.Start(" To="excelReport: false);"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="ExcelClient.Start(toExcel: true, excelReport: false);"/>
+    </Module>
+
+    <Module Name="Dashboard" DependsOn="Chart,UserQuery">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((DashboardEntity cp) => cp.Owner).Replace(new ImplementedByAttribute(typeof(UserEntity), typeof(RoleEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="DashboardLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="ViewLogLogic.Start(sb, dqm, new HashSet&lt;Type> { typeof(UserQueryEntity), typeof(UserChartEntity), typeof(DashboardEntity) });"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="DashboardLogic.RegisterUserTypeCondition(sb, AgileGroup.UserEntities);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="DashboardLogic.RegisterRoleTypeCondition(sb, AgileGroup.RoleEntities);"/>
+      <RemoveLine Path="Agile.Web\Controllers\HomeController.cs" From="var panel = DashboardLogic.GetHomePageDashboard();" To="return View(DashboardClient.ViewPrefix.FormatWith(&quot;Dashboard&quot;), panel);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="DashboardClient.Start();"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="DashboardClient.Start();"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" Line="new WebMenuItem { Link = new FindOptions(typeof(DashboardEntity)) },"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml" Line="&lt;swdb:DashboardView />"/>
+    </Module>
+
+    <Module Name="Process">
+      <RemoveLine Path="Agile.Entities\Order.cs" Line="public static readonly ConstructSymbol&lt;ProcessEntity&gt;.FromMany&lt;OrderEntity&gt; CancelWithProcess = OperationSymbol.Construct&lt;ProcessEntity&gt;.FromMany&lt;OrderEntity&gt;();"/>
+      <RemoveLine Path="Agile.Entities\Order.cs" From="public static class OrderProcess" To="}"/>
+      <RemoveLine Path="Agile.Logic\OrderLogic.cs" Line="ProcessLogic.Register(OrderProcess.CancelOrders, new CancelOrderAlgorithm());"/>
+      <RemoveLine Path="Agile.Logic\OrderLogic.cs" From="public class CancelOrderAlgorithm : PackageExecuteAlgorithm&lt;OrderEntity&gt;" To="} //CancelOrderAlgorithm"/>
+      <RemoveLine Path="Agile.Logic\OrderLogic.cs" From="new Graph&lt;ProcessEntity&gt;.ConstructFromMany&lt;OrderEntity&gt;(OrderOperation.CancelWithProcess)" To="}.Register();"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="sb.Schema.Settings.FieldAttributes((ProcessEntity cp) => cp.Data).Replace(new ImplementedByAttribute(typeof(PackageEntity), typeof(PackageOperationEntity)));"
+                  To="sb.Schema.Settings.FieldAttributes((ProcessEntity s) => s.User).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="ProcessLogic.Start(sb, dqm);"
+                  To="PackageLogic.Start(sb, dqm, packages: true, packageOperations: true);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="ProcessRunnerLogic.StartRunningProcesses(5 * 1000);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="ProcessClient.Start(" To="packageOperations: true);"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="ProcessClient.Start(package: true, packageOperation: true);"/>
+    </Module>
+
+    <Module Name="Scheduler" DependsOn="Process">
+      <RemoveLine Path="Agile.Entities\Order.cs" From="public static class OrderTasks" To="}"/>
+      <RemoveLine Path="Agile.Logic\OrderLogic.cs" From="SimpleTaskLogic.Register(OrderTasks.CancelOldOrdersWithProcess, () =>" To="});//CancelOldOrdersProcess"/>
+  
+      <RemoveLine Path="Agile.Logic\Starter.cs" 
+                  From="sb.Schema.Settings.FieldAttributes((ScheduledTaskEntity a) => a.User).Replace(new ImplementedByAttribute(typeof(UserEntity)));"
+                  To="sb.Schema.Settings.FieldAttributes((ScheduledTaskLogEntity a) => a.User).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="SchedulerLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="SchedulerClient.Start(simpleTask: true);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="SchedulerLogic.StartScheduledTasks();"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="SchedulerClient.Start();"/>
+    </Module>
+
+    <Module Name="Mailing">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((EmailMessageEntity em) => em.From.EmailOwner).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((EmailMessageEntity em) => em.Recipients.First().EmailOwner).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((SmtpConfigurationEntity sc) => sc.DefaultFrom.EmailOwner).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((SmtpConfigurationEntity sc) => sc.AdditionalRecipients.First().EmailOwner).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="SmtpConfigurationLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="EmailLogic.Start(sb, dqm, () => Configuration.Value.Email, et => Configuration.Value.SmtpConfiguration);"/>
+      <RemoveFiles Path="Agile.Web\Libs\ckeditor"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="MailingClient.Start(" To="pop3Config: false);" />
+      <RemoveLine Path="Agile.Entities\AgileConfiguration.cs" From="[NotNullable]/*Email*/" To="}/*Email*/"/>
+      <RemoveLine Path="Agile.Web\Views\Agile\ApplicationConfiguration.cshtml" From="&lt;fieldset id=&quot;email&quot;>" To="&lt;/fieldset>"/>
+      <RemoveLine Path="Agile.Load\Program.cs" From="Email = new EmailConfigurationEntity" To="}, //Email"/>
+      <RemoveLine Path="Agile.Web\Code\AgileClient.cs" Line="Email = new EmailConfigurationEntity()"/>
+    </Module>
+
+    <Module Name="SMS">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="SMSLogic.Start(sb, dqm, null, () => Configuration.Value.Sms);" />
+      <RemoveLine Path="Agile.Logic\Starter.cs" DependsOn="ExampleEntities"
+                  From="SMSLogic.RegisterPhoneNumberProvider&lt;PersonEntity>(p => p.Phone, p => null);"
+                  To="SMSLogic.RegisterPhoneNumberProvider&lt;CompanyEntity&gt;(p => p.Phone, p => null);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="SMSClient.Start();" />
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="SMSClient.Start();" />
+      <RemoveLine Path="Agile.Entities\AgileConfiguration.cs" From="[NotNullable]/*Sms*/" To="}/*Sms*/"/>
+      <RemoveLine Path="Agile.Web\Views\Agile\ApplicationConfiguration.cshtml" From="&lt;fieldset id=&quot;sms&quot;>" To="&lt;/fieldset>"/>
+      <RemoveLine Path="Agile.Load\Program.cs" From="Sms = new SMSConfigurationEntity" To="} //Sms"/>
+      <RemoveLine Path="Agile.Web\Code\AgileClient.cs" Line="Sms = new SMSConfigurationEntity(),"/>
+    </Module>
+
+    <Module Name="Auth">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="AuthLogic.Start(sb, dqm, &quot;System&quot;, null);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="AuthLogic.StartAllModules(sb, dqm);"/>
+      <RemoveSpanInLines Path="Agile.Logic\Starter.cs" Span="typeof(UserEntity),"/>
+      <RemoveSpanInLines Path="Agile.Logic\Starter.cs" Span="typeof(UserEntity)"/>
+      <RemoveSpanInLines Path="Agile.Logic\Starter.cs" Span="typeof(RoleEntity)"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="AuthClient.Start(" To="passwordExpiration: false);" />
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="AuthAdminClient.Start(" To="permissions: true);" />
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" From="AuthClient.Start(" To="defaultPasswordExpiresLogic: false);" />
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{43, AuthLogic.ImportExportAuthRules},"/>
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{20, EmployeeLoader.CreateUsers }," DependsOn="!Migrations,LoadNorthwind"/>
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{21, CreateSystemUser }," DependsOn="!Migrations" />
+      <RemoveLine Path="Agile.Load\Program.cs" Line="EmployeeLoader.CreateUsers," DependsOn="Migrations,LoadNorthwind"/>
+      <RemoveLine Path="Agile.Load\Program.cs" Line="CreateSystemUser, " DependsOn="Migrations"/>
+      <RemoveLine Path="Agile.Load\EmployeeLoader.cs" From="internal static void CreateUsers()" To="} //CreateUsers"/>
+      <RemoveLine Path="Agile.Load\Program.cs" From="internal static void CreateSystemUser()" To="} //CreateSystemUser"/>
+      <RemoveFiles Path="Agile.Load\AuthRules.xml" DependsOn="ExampleEntities"/>
+      <RemoveFiles Path="Agile.Entities\UserEmployeeMixin.cs" DependsOn="ExampleEntities"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="MixinDeclarations.Register&lt;UserEntity, UserEmployeeMixin&gt;();" DependsOn="ExampleEntities"/>
+      <RemoveLine Path="Agile.Web\ServerAgile.svc.cs" From="public override void Login(string username, byte[] passwordHash)" To="} //Login" DependsOn="ExampleEntities"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="AuthLogic.UserLogingIn += user =>" To="}; //UserLogingIn" DependsOn="ExampleEntities" />
+      <RemoveLine Path="Agile.Web\Global.asax.cs" 
+                  From="Navigator.EntitySettings&lt;UserEntity&gt;().CreateViewOverrides()"
+                  To=".AfterLine((UserEntity u) => u.Role, (html, tc) => html.EntityLine(tc, u => u.Mixin&lt;UserEmployeeMixin>().Employee));"
+                  DependsOn="ExampleEntities"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" From="Navigator.EntitySettings&lt;UserEntity&gt;().OverrideView += (usr, ctrl) =>" To="};" DependsOn="ExampleEntities"/>
+      <RemoveSpanInLines Path="Agile.Entities\Employee.cs" Span="get { return UserEntity.Current.Mixin&lt;UserEmployeeMixin>().Employee; } //" DependsOn="ExampleEntities" />
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" Line="@{ Html.RenderPartial(AuthClient.LoginUserControlView);}" />
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" From="@if (UserEntity.Current != null) //Omnibox" To="{" />
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" From="@if (UserEntity.Current != null) //Menu" To="{" />
+      <RemoveSpanInLines Path="Agile.Web\Views\Shared\_Layout.cshtml" Span="} @*UserEntity.Current*@" />
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" Line="new WebMenuItem { Link = new FindOptions(typeof(UserEntity)) },"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" Line="new WebMenuItem { Link = new FindOptions(typeof(RoleEntity)) },"/>
+      <RemoveLine Path="Agile.Web\Code\AgileClient.cs" From="var user = Database.Query&lt;UserEntity>()" To="links.Add(new QuickLinkView(user));"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="static IServerAgile Login(IServerAgile result)" To="} //Login"/>
+      <RemoveLine Path="Agile.Windows\Program.cs" From="if (Application.Current == null || Application.Current.CheckAccess())" To="});"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml" Line="&lt;MenuItem Tag=&quot;{m:Explore QueryName={x:Type sea:UserEntity}}&quot;/>"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml" Line="&lt;MenuItem Tag=&quot;{m:Explore QueryName={x:Type sea:RoleEntity}}&quot;/>"/>
+      <RemoveLine Path="Agile.Test.Environment\AgileEnvironment.cs" From="internal static void LoadUsers()" To="}//LoadUsers"/>
+      <RemoveLine Path="Agile.Test.Environment\AgileEnvironment.cs" Line="user.SetMixin((UserEmployeeMixin e) => e.Employee, Database.Query&lt;EmployeeEntity>().Single(e => e.FirstName == userName));" DependsOn="ExampleEntities"/>
+      <RemoveLine Path="Agile.Test.Environment\EnvironmentTest.cs" Line="AgileEnvironment.LoadUsers();"/>
+      <RemoveLine Path="Agile.Test.Environment\EnvironmentTest.cs" Line="var authRules = XDocument.Load(@&quot;D:\Signum\Agile\Agile.Load\AuthRules.xml&quot;); //Change this route if necessary. Only god knows where MSTest is running."/>
+      <RemoveLine Path="Agile.Test.Environment\EnvironmentTest.cs" Line="AuthLogic.LoadRoles(authRules);"/>
+      <RemoveLine Path="Agile.Test.Environment\EnvironmentTest.cs" Line="AuthLogic.ImportRulesScript(authRules, interactive: false).PlainSqlCommand().ExecuteLeaves();"/>
+    </Module>
+
+    <Module Name="Translation">
+      <RemoveLine Path="Agile.Web\Web.config" From="&lt;client>" To="&lt;/client>" />
+      <RemoveLine Path="Agile.Web\Web.config" Line="&lt;binding name=&quot;BasicHttpBinding_LanguageService&quot;/>" />
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="TranslationLogic.Start(sb, dqm);" To="TranslatedInstanceLogic.Start(sb, dqm, () => CultureInfo.GetCultureInfo(&quot;en&quot;));"/>
+      <RemoveFiles Path="Agile.Entities\Translations" DependsOn="ExampleEntities" />
+      <RemoveFiles Path="Agile.Web\Service References" />
+      <RemoveFiles Path="Agile.Web\Translations" />
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="TranslationClient.Start(new AlreadyTranslatedTranslator(new BingTranslator())," To="instanceTranslator: true);" />
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture = DefaultCulture;" To="return DefaultCulture; //Translation" />
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="public class BingTranslator : ITranslator" To="} // BingTranslator" />
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="using Agile.Web.BingTranslationService;" />
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{44, ImportSpanishInstanceTranslations}," DependsOn="LoadNorthwind,!Migrations"/>
+      <RemoveLine Path="Agile.Load\Program.cs" Line="ImportSpanishInstanceTranslations," DependsOn="LoadNorthwind,Migrations"/>
+      <RemoveLine Path="Agile.Load\Program.cs" From="public static void ImportSpanishInstanceTranslations()" To="}" DependsOn="LoadNorthwind"/>
+      <RemoveFiles Path="Agile.Load\Category.es.View.xlsx" DependsOn="LoadNorthwind"/>
+      <RemoveLine Path="Agile.Entities\Product.cs" Line="[TranslateField] //Localize categoryName column" DependsOn="ExampleEntities"/>
+      <RemoveLine Path="Agile.Entities\Product.cs" Line="[TranslateField] //Localize description column" DependsOn="ExampleEntities"/>
+      <RemoveLine Path="Agile.Web\Scripts\Agile.ts" From="$(&quot;#languageSelector&quot;).bind(&quot;change&quot;, function () {" To="});"/>
+      <RemoveLine Path="Agile.Web\Scripts\Agile.js" From="$(&quot;#languageSelector&quot;).bind(&quot;change&quot;, function () {" To="});"/>
+      <RemoveLine Path="Agile.Web\Controllers\HomeController.cs" From="public ActionResult ChangeLanguage()" To="} //ChangeLanguage"/>
+    </Module>
+    
+    <Module Name="Auth_ResetPasswordRequest" DependsOn="Auth,Mailing">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="ResetPasswordRequestLogic.Start(sb, dqm);"/>
+    </Module>
+
+    <Module Name="Auth_UserTicket" DependsOn="Auth">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="UserTicketLogic.Start(sb, dqm);"/>
+    </Module>
+
+    <Module Name="SessionLog" DependsOn="Auth">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="SessionLogLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="SessionLogClient.Start();"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="SessionLogClient.LogSessionEnd((UserEntity)Session[UserHolder.UserSessionKey], TimeSpan.FromMinutes(Session.Timeout));"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" Line="new WebMenuItem { Link = new FindOptions(typeof(SessionLogEntity)) },"/>
+    </Module>
+
+    <Module Name="Alerts">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="AlertLogic.Start(sb, dqm, typeof(UserEntity), /*Alert*/typeof(OrderEntity));"/>
+      <RemoveSpanInLines Path="Agile.Logic\Starter.cs" Span=", /*Alert*/typeof(OrderEntity)" DependsOn="ExampleEntities" />
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((AlertEntity a) => a.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((AlertEntity a) => a.AttendedBy).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="AlertClient.Start(typeof(UserEntity), /*Alert*/typeof(OrderEntity));"/>
+      <RemoveSpanInLines Path="Agile.Web\Global.asax.cs" Span=", /*Alert*/typeof(OrderEntity)" DependsOn="ExampleEntities"/>      
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="AlertClient.Start(typeof(UserEntity), /*Alert*/typeof(OrderEntity));"/>
+      <RemoveSpanInLines Path="Agile.Windows\App.xaml.cs" Span=", /*Alert*/typeof(OrderEntity)" DependsOn="ExampleEntities"/>
+    </Module>
+
+    <Module Name="Notes">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="NoteLogic.Start(sb, dqm, typeof(UserEntity), /*Note*/typeof(OrderEntity));"/>
+      <RemoveSpanInLines Path="Agile.Logic\Starter.cs" Span=", /*Note*/typeof(OrderEntity)" DependsOn="ExampleEntities" />
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="sb.Schema.Settings.FieldAttributes((NoteEntity n) => n.CreatedBy).Replace(new ImplementedByAttribute(typeof(UserEntity)));"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="NoteClient.Start(typeof(UserEntity), /*Note*/typeof(OrderEntity));"/>
+      <RemoveSpanInLines Path="Agile.Web\Global.asax.cs" Span=", /*Note*/typeof(OrderEntity)" DependsOn="ExampleEntities" />      
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="NoteClient.Start(typeof(UserEntity), /*Note*/typeof(OrderEntity));"/>
+      <RemoveSpanInLines Path="Agile.Windows\App.xaml.cs" Span=", /*Note*/typeof(OrderEntity)" DependsOn="ExampleEntities" />
+    
+    </Module>
+
+    <Module Name="Cache">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="CacheLogic.Start(sb);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="SetupCache(sb);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="private static void SetupCache(SchemaBuilder sb)" To="}"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="CacheClient.Start();"/>
+    </Module>
+
+    <Module Name="SplitDB">
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="string logDatabase = Connector.TryExtractDatabaseNameWithPostfix(ref connectionString, &quot;_Log&quot;);"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="if (logDatabase.HasText())"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="SetLogDatabase(sb.Schema, new DatabaseName(null, logDatabase));"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="public static void SetLogDatabase(Schema schema, DatabaseName logDatabaseName)" To="}"/>
+    </Module>
+
+    <Module Name="ThemeSelector">
+      <RemoveFiles Path="Agile.Web\Libs\bootstrap\themes"/>
+      <RemoveLine Path="Agile.Web\Scripts\Agile.ts" From="$(&quot;#themeSelector&quot;).bind(&quot;change&quot;, function () {" To="});"/>
+      <RemoveLine Path="Agile.Web\Scripts\Agile.js" From="$(&quot;#themeSelector&quot;).bind(&quot;change&quot;, function () {" To="});"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" From="&lt;li class=&quot;theme-selector-container&quot;&gt;" To="&lt;/li&gt;"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" From="//theme0" To="{ //theme1"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" From="} //theme2" To="} //theme3"/>
+	    <RemoveLine Path="Agile.Web\Controllers\HomeController.cs" From="public ActionResult ChangeTheme()" To="}"/>
+	    <RemoveLine Path="Agile.Web\Code\AgileClient.cs" Line="public static string ThemeSessionKey = &quot;swCurrentTheme&quot;;"/>
+	  </Module>
+
+    <Module Name="PublicCatalog" DependsOn="ExampleEntities,Translation,Cache,Files">
+      <RemoveLine Path="Agile.Logic\ProductLogic.cs" Line="public static ResetLazy&lt;Dictionary&lt;CategoryEntity, List&lt;ProductEntity&gt;&gt;&gt; ActiveProducts;"/>
+      <RemoveLine Path="Agile.Logic\ProductLogic.cs" From="ActiveProducts = sb.GlobalLazy(() =>" To="new InvalidateWith(typeof(ProductEntity)));"/>
+      <RemoveFiles Path="Agile.Web\Views\Home\PublicCatalog.cshtml"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" From="&lt;li class=&quot;language-selector-container&quot;&gt;" To="&lt;/li&gt;"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\Menu.cshtml" From="new WebMenuItem  //Catalog" To="}, //Catalog"/>
+      <RemoveSpanInLines Path="Agile.Web\Controllers\HomeController.cs" Span="[AuthenticationRequired(false)]"/>
+      <RemoveLine Path="Agile.Web\Controllers\HomeController.cs" From="if (UserEntity.Current == null)" To="return RedirectToAction(&quot;PublicCatalog&quot;);"/>
+      <RemoveLine Path="Agile.Web\Controllers\HomeController.cs" From="public ActionResult PublicCatalog()" To="} //PublicCatalog"/>
+    </Module>
+
+    <Module Name="Profiler">
+      <RemoveLine Path="Agile.Web/ServerAgile.svc.cs" From="string longDescription = mi.Name + description == null ? null : (&quot; &quot; + description);" To="using (HeavyProfiler.Log(&quot;WCF&quot;, () => longDescription))"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" From="ProfilerLogic.Start(sb, dqm," To="overrideSessionTimeout: true);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="SignumControllerFactory.EveryController().AddFilters(new ProfilerFilterAttribute());"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="ProfilerClient.Start();"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="ProfilerClient.Start();"/>
+    </Module>
+
+    <Module Name="Omnibox">
+      <RemoveLine Path="Agile.Web\Global.asax.cs" From="OmniboxClient.Start();" To="OmniboxClient.Register(new DashboardOmniboxProvider());"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" From="OmniboxClient.Start();" To="OmniboxClient.Register(new DashboardOmniboxProvider());"/>
+      <RemoveLine Path="Agile.Web\Views\Shared\_Layout.cshtml" From="&lt;li>@*Omnibox*@" To="&lt;/li>"/>
+      <RemoveLine Path="Agile.Windows\Main.xaml" Line="&lt;swo:OmniboxAutocomplete MinWidth=&quot;200&quot; DockPanel.Dock=&quot;Right&quot;/>"/>
+    </Module>
+	
+	<Module Name="Map">
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="MapClient.Start();"/>
+	  <RemoveLine Path="Agile.Web\Global.asax.cs" Line="OmniboxClient.Register(new MapOmniboxProvider());"/>
+    </Module>
+
+    <Module Name="Help">
+      <RemoveLine Path="Agile.Load\Program.cs" Line="{45, HelpXml.ImportExportHelp},"/>
+      <RemoveLine Path="Agile.Logic\Starter.cs" Line="HelpLogic.Start(sb, dqm);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="HelpClient.Start(&quot;Images&quot;, &quot;http://localhost:7654/&quot;);"/>
+      <RemoveLine Path="Agile.Web\Global.asax.cs" Line="OmniboxClient.Register(new HelpOmniboxProvider());"/>
+      <RemoveLine Path="Agile.Windows\App.xaml.cs" Line="HelpClient.Start(); "/>
+    </Module>
+
+    <Module Name="Test.Environment">
+      <RemoveFiles Path="Agile.Test.Environment"/>
+
+      <RemoveLine DependsOn="ExampleEntities"  Path="Agile.Test.Environment\AgileEnvironment.cs"
+                  From="internal static void LoadEmployees()"
+                  To="} //LoadEmployees" />
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Environment\AgileEnvironment.cs"
+                   From="internal static void LoadProducts()"
+                   To="}//LoadShippers" />
+      <RemoveFiles DependsOn="ExampleEntities" Path="Agile.Test.Environment\AgileExtensions.cs" />
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Environment\EnvironmentTest.cs" Line="AgileEnvironment.LoadEmployees();"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Environment\EnvironmentTest.cs" Line="AgileEnvironment.LoadProducts();"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Environment\EnvironmentTest.cs" Line="AgileEnvironment.LoadCustomers();"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Environment\EnvironmentTest.cs" Line="AgileEnvironment.LoadShippers();"/>
+    </Module>
+
+    <Module Name="Test.Logic" DependsOn="Test.Environment">
+      <RemoveFiles Path="Agile.Test.Logic"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Logic\OrderTest.cs" From="[TestMethod]" To="}//OrderTestExample"/>
+    </Module>
+
+    <Module Name="Test.Windows" DependsOn="Test.Environment, Windows">
+      <RemoveFiles Path="Agile.Test.Windows"/>
+
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Windows\Common.cs"
+            From="public static DetailGridProxy DetailGrid(this ILineContainer&lt;OrderEntity> container)"
+            To="}//DetailGrid"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Windows\Common.cs" From="public class DetailGridProxy" To="}//DetailGridRowProxy"/>
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Windows\OrderWindowTest.cs" From="[TestMethod]" To="}//OrderWindowsTestExample"/>
+    </Module>
+
+    <Module Name="Test.Web" DependsOn="Test.Environment">
+      <RemoveFiles Path="Agile.Test.Web"/>
+
+      <RemoveLine DependsOn="ExampleEntities" Path="Agile.Test.Web\OrderWebTest.cs" From="[TestMethod]" To="}//OrderWebTestExample"/>
+    </Module>
+  </Modules>
+
+  <Projects>
+    <Project Path ="Agile.Entities\Agile.Entities.csproj"/>
+    <Project Path ="Agile.Load\Agile.Load.csproj"/>
+    <Project Path ="Agile.Local\Agile.Local.csproj"/>
+    <Project Path ="Agile.Logic\Agile.Logic.csproj"/>
+    <Project Path ="Agile.Web\Agile.Web.csproj"/>
+    <Project Path ="Agile.Windows\Agile.Windows.csproj"/>
+    <Project Path ="Agile.Test.Environment\Agile.Test.Environment.csproj"/>
+    <Project Path ="Agile.Test.Logic\Agile.Test.Logic.csproj"/>
+    <Project Path ="Agile.Test.Web\Agile.Test.Web.csproj"/>
+    <Project Path ="Agile.Test.Windows\Agile.Test.Windows.csproj"/>
+  </Projects>
+
+  <Solutions>
+    <Solution Path="Agile.sln" />
+  </Solutions>
+</File>

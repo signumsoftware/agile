@@ -1,0 +1,21 @@
+@using Agile.Entities
+@using Agile.Web.Controllers
+@using Signum.Web.Files
+@using (var cc = Html.TypeContext<CategoryEntity>())
+{
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.FileLine(cc, a => a.Picture)
+            @if (cc.Value.Picture != null)
+            {
+                <img class="img-responsive" src="@Agile.Web.AgileClient.Base64Data(cc.Value.Picture)" />
+            } @*Picture*@
+        </div>
+
+        <div class="col-sm-9">
+            @Html.ValueLine(cc, c => c.CategoryName)
+            @Html.ValueLine(cc, c => c.Description)
+
+        </div>
+    </div>
+}

@@ -1,0 +1,6 @@
+@using Agile.Entities
+
+@using (var rc = Html.TypeContext<RegionEntity>()) 
+{
+	@Html.ValueLine(rc, r => r.Description)
+}

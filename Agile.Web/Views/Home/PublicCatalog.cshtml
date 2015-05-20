@@ -1,0 +1,48 @@
+@using Signum.Engine;
+@using Signum.Engine.Translation;
+@using Agile.Entities;
+@{
+    ViewBag.Title = "PublicCatalog";
+}
+
+<h2>Agile Product Catalog</h2>
+
+@foreach (var item in Agile.Logic.ProductLogic.ActiveProducts.Value.OrderBy(g => g.Key.Id))
+{
+    
+    <div class="media">
+        @if (item.Key.Picture != null)
+        {
+            <img class="pull-left" style="max-width:96px;max-width:96px" src="@Agile.Web.AgileClient.Base64Data(item.Key.Picture)"/>
+        }
+        <div class="media-body">
+            <h4 class="media-heading">@item.Key.TranslatedField(a => a.CategoryName)</h4>
+            @item.Key.TranslatedField(a => a.Description)
+        </div>
+    </div>
+    
+    
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>@Html.PropertyNiceName((ProductEntity p) => p.ProductName)</th>
+                <th>@Html.PropertyNiceName((ProductEntity p) => p.UnitPrice)</th>
+                <th>@Html.PropertyNiceName((ProductEntity p) => p.QuantityPerUnit)</th>
+                <th>@Html.PropertyNiceName((ProductEntity p) => p.UnitsInStock)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in item.Value.OrderBy(a => a.ReorderLevel).ThenBy(a => a.Id))
+            {
+                <tr>
+                    <td>@p.ProductName</td>
+                    <td>@p.UnitPrice.ToString("c")</td>
+                    <td>@p.QuantityPerUnit</td>
+                    <td>@p.UnitsInStock</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+}
