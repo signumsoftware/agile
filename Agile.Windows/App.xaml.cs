@@ -112,8 +112,6 @@ namespace Agile.Windows
             HelpClient.Start(); 
 
             ExceptionClient.Start();
-
-            NoteClient.Start(typeof(UserEntity), /*Note*/typeof(OrderEntity));
             ProfilerClient.Start();
 
             OmniboxClient.Start();

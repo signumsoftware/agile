@@ -169,8 +169,6 @@ namespace Agile.Web
                 instanceTranslator: true);
 
             SchedulerClient.Start(simpleTask: true);
-
-            NoteClient.Start(typeof(UserEntity), /*Note*/typeof(OrderEntity));
             LinksClient.Start(widget: true, contextualItems: true);
 
             HelpClient.Start("Images", "http://localhost:7654/"); 
