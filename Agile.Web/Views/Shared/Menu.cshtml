@@ -6,16 +6,17 @@
 @using Signum.Entities.Dashboard
 @using Signum.Entities.Chart
 @using Signum.Web.Omnibox
-@Html.WebMenu(
+@using Agile.Web.Controllers
+    @Html.WebMenu(
 new WebMenuItem
 {
     Text = "Admin",
-    Children = 
+    Children =
     {
          new WebMenuItem //Security
          {
               Text = "Security",
-              Children = 
+              Children =
               {
                   new WebMenuItem { Link = new FindOptions(typeof(UserEntity)) },
                   new WebMenuItem { Link = new FindOptions(typeof(RoleEntity)) },
@@ -25,7 +26,7 @@ new WebMenuItem
          new WebMenuItem
          {
               Text = "Assets",
-              Children = 
+              Children =
               {
                   new WebMenuItem { Link = new FindOptions(typeof(UserQueryEntity)) },
                   new WebMenuItem { Link = new FindOptions(typeof(UserChartEntity)) },
@@ -34,4 +35,13 @@ new WebMenuItem
               }
          }
     }
+},
+new WebMenuItem
+{
+    Text = typeof(BoardEntity).NicePluralName(),
+    Children = Signum.Engine.Database.Query<BoardEntity>().Select(a => a.ToLite()).ToList().Select(a => new WebMenuItem
+    {
+        Text = a.ToString(),
+        Link = Url.Action((BoardController b) => b.View(a))
+    }).ToList()
 })

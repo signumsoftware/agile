@@ -125,6 +125,7 @@ namespace Agile.Logic
             BoardLogic.Start(sb, dqm);
             CardLogic.Start(sb, dqm);
             CommentLogic.Start(sb, dqm);
+            AttachmentLogic.Start(sb, dqm);
             TagLogic.Start(sb, dqm);
             NotificationLogic.Start(sb, dqm);
 

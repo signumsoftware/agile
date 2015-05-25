@@ -28,7 +28,7 @@ namespace Agile.Web
 {
     public static class AgileClient
     {
-        public static string ViewPrefix = "~/Views/Agile/{0}.cshtml";
+        public static string ViewPrefix = "~/Views/Admin/Agile/{0}.cshtml";
         public static JsModule ProductModule = new JsModule("Product");
 
         public static void Start()
@@ -38,6 +38,7 @@ namespace Agile.Web
                 Navigator.AddSettings(new List<EntitySettings>
                 {
                     new EntitySettings<ApplicationConfigurationEntity>() { PartialViewName = e => ViewPrefix.FormatWith("ApplicationConfiguration") },
+                    new EmbeddedEntitySettings<AttachmentRepositoryEntity>() { PartialViewName = e => ViewPrefix.FormatWith("AttachmentRepository") },
                 });
 
                 Constructor.Register(ctx => new ApplicationConfigurationEntity

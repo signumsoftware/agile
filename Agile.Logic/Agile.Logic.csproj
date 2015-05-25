@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="BoardLogic.cs" />
     <Compile Include="CardLogic.cs" />
+    <Compile Include="AttachmentLogic.cs" />
     <Compile Include="CommentLogic.cs" />
     <Compile Include="NotificationLogic.cs" />
     <Compile Include="ProjectLogic.cs" />

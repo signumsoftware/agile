@@ -1,0 +1,13 @@
+@using Agile.Entities;
+
+@using (var pc = Html.TypeContext<ProjectEntity>())
+{
+    @Html.ValueLine(pc, p => p.Name)
+    @Html.ValueLine(pc, p => p.Archived)
+    @Html.EntityStrip(pc, p => p.Members)
+    
+    if(!pc.Value.IsNew)
+    {
+        @Html.SearchControl(new FindOptions(typeof(BoardEntity), "Project", pc.Value).RemovePagination(), new Context(pc, "b"))
+    }
+}

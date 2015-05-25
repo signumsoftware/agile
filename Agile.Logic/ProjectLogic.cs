@@ -30,7 +30,7 @@ namespace Agile.Logic
                         Entity = p,
                         p.Id,
                         p.Name,
-                        p.Removed,
+                        Removed = p.Archived,
                     });
         
                 new Graph<ProjectEntity>.Execute(ProjectOperation.Save)

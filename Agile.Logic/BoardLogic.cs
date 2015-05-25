@@ -23,6 +23,32 @@ namespace Agile.Logic
         {
             return ListsExpression.Evaluate(e);
         }
+
+        static Expression<Func<ListEntity, ListInfo>> ToListInfoExpression =
+            list => new ListInfo
+            {
+                 Lite = list.ToLite(),
+                 Name = list.Name,
+                 Subscription = list.SubscriptionMethod(),
+                 Cards = list.Cards().OrderBy(a=>a.Order).Select(c => c.ToCardInfo()).ToList(),
+            }; 
+        public static ListInfo ToListInfo(this ListEntity list)
+        {
+            return ToListInfoExpression.Evaluate(list);
+        }
+
+        static Expression<Func<BoardEntity, BoardInfo>> ToBoardInfoExpression = 
+            board => new BoardInfo
+            {
+                 Lite = board.ToLite(),
+                 Name = board.Name,
+                 Subscription = board.SubscriptionMethod(),
+                 List = board.Lists().OrderBy(a => a.Order).Select(c => c.ToListInfo()).ToList(),
+            };
+        public static BoardInfo ToBoardInfo(this BoardEntity board)
+        {
+            return ToBoardInfoExpression.Evaluate(board);
+        }
     
         public static void Start(SchemaBuilder sb, DynamicQueryManager dqm)
         {
@@ -59,7 +85,7 @@ namespace Agile.Logic
 
                 new Graph<BoardEntity>.ConstructFrom<ProjectEntity>(BoardOperation.CreateBoardFromProject)
                 {
-                    Construct = (p, _) => new BoardEntity { Project = p.ToLite() }
+                    Construct = (p, args) => new BoardEntity { Project = p.ToLite(), Name = args.TryGetArgC<string>() }
                 }.Register();
 
                 new Graph<BoardEntity>.Execute(BoardOperation.Save)
@@ -73,19 +99,22 @@ namespace Agile.Logic
                 {
                     Execute = (b, _) => { b.Archived = true; }
                 }.Register();
-                
- 
+
 
                 new Graph<ListEntity>.ConstructFrom<BoardEntity>(ListOperation.CreateListFromBoard)
                 {
-                    Construct = (b, _) => new ListEntity { Board = b.ToLite() }
+                    Construct = (b, args) => new ListEntity { Board = b.ToLite(), Name = args.TryGetArgC<string>() }
                 }.Register();
 
                 new Graph<ListEntity>.Execute(ListOperation.Save)
                 {
                     AllowsNew = true,
                     Lite = false,
-                    Execute = (l, _) => { }
+                    Execute = (l, _) =>
+                    {
+                        if (l.IsNew)
+                            l.Order = (l.Board.InDB().SelectMany(a => a.Lists()).Max(a => (decimal?)a.Order) ?? -1) + 1;
+                    }
                 }.Register();
 
                 new Graph<ListEntity>.Execute(ListOperation.Move)
@@ -127,5 +156,21 @@ namespace Agile.Logic
                     .Execute();
             }
         }
+    }
+
+    public class ListInfo
+    {
+        public Lite<ListEntity> Lite;
+        public string Name;
+        public SubscriptionMethod? Subscription;
+        public List<CardInfo> Cards;
+    }
+
+    public class BoardInfo
+    {
+        public Lite<BoardEntity> Lite;
+        public string Name;
+        public SubscriptionMethod? Subscription;
+        public List<ListInfo> List;
     }
 }

@@ -1,0 +1,9 @@
+@using Agile.Entities;
+
+@using (var nc = Html.TypeContext<NotificationEntity>())
+{
+    @Html.ValueLine(nc, n => n.CreationDate)
+    @Html.EntityLine(nc, n => n.User)
+    @Html.EntityLine(nc, n => n.Target)
+    @Html.ValueLine(nc, n => n.Attended)
+}

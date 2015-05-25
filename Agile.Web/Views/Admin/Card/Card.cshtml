@@ -1,0 +1,84 @@
+@using Agile.Entities;
+@using Agile.Logic;
+@using Signum.Engine.Chart;
+@using Signum.Engine;
+
+@using (var cc = Html.TypeContext<CardEntity>())
+{
+
+    <div class="row">
+        <div class="col-sm-9">
+            @Html.ValueLine(cc, c => c.Title)
+            <div class="col-sm-12">
+                @Html.ValueLine(cc, c => c.Description, vl =>
+       {
+           vl.ValueLineType = ValueLineType.TextArea;
+           vl.FormGroupStyle = FormGroupStyle.SrOnly;
+           vl.ValueHtmlProps.Add("style", "width:100%;height:180px;");
+       })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            @using (var sc = cc.SubContext())
+            {
+
+                sc.LabelColumns = new BsColumn(5);
+                @Html.EntityLine(sc, c => c.List, vl => { vl.ReadOnly = true; })
+                if (sc.Value.Archived)
+                {
+                    @Html.ValueLine(sc, c => c.Archived, vl => vl.ReadOnly = true)
+                }
+                @Html.ValueLine(sc, c => c.Order)
+                @Html.EntityListCheckbox(sc, c => c.Tags, elb => elb.CustomizeLabel = (tag, lite) =>
+                       tag.Attr("style", "padding:5px;border-radius:5px;color:white;background-color:" + ((TagEntity)lite.Retrieve()).Color.RGBHex()))
+            }
+        </div>
+    </div>
+
+            List<HistoryInfo> history = new List<HistoryInfo>();
+            history.AddRange(cc.Value.Comments().Select(c => c.ToCommentInfo()));
+            history.AddRange(cc.Value.Attachments().Select(c => c.ToAttachmentInfo()));
+            history.AddRange(cc.Value.CardTransitions().Select(c => c.ToCardTransitionInfo()));
+            history.OrderByDescending(a => a.CreationDate);
+
+
+            <div class="history-list">
+                @foreach (var hi in history)
+                {
+                    <hr />
+                    <div class="history-item">
+                        <div class="history-item-title">
+                            <span style="color:@(ChartColorLogic.ColorFor(hi.User).TryToHtml() ??"gray")" class="history-user">@hi.User</span> @hi.ToString() <span title="@hi.CreationDate.ToString()">@hi.CreationDate.ToAgoString()</span>
+                        </div>
+                        @if (hi is CommentInfo)
+                        {
+                            var ci = (CommentInfo)hi;
+                            <div class="well well-sm">@ci.Text</div>
+                        }
+                        else if (hi is CardTransitionInfo)
+                        {
+                            var cti = (CardTransitionInfo)hi;
+                            <div>
+                                <span class="history-transition">@cti.From</span>
+                                <span class="glyphicon glyphicon-arrow-right"></span>
+                                <span class="history-transition">@cti.To</span>
+                            </div>
+                        }
+                        else if (hi is AttachmentInfo)
+                        {
+                            var ai = (AttachmentInfo)hi;
+                            if (ai.Type == AttachmentType.Image)
+                            {
+                                <a href="@Url.Content(ai.File.FullWebPath)">
+                                    <img src="@Url.Content(ai.File.FullWebPath)" />
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Content(ai.File.FullWebPath)" download="@ai.File.FileName" />
+                            }
+                        }
+                    </div>
+                }
+            </div>
+}

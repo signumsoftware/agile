@@ -1,0 +1,25 @@
+﻿@using Agile.Logic
+@using Agile.Web.Board
+@model ListInfo
+
+<div class="list" data-card="@Model.Lite.Key()">
+    <h4><a href="@Navigator.NavigateRoute(Model.Lite)">@Model.Name</a></h4>
+    <div class="list-cards">
+        @foreach (var c in Model.Cards)
+        {
+            @Html.Partial(BoardClient.ViewClientPrefix.FormatWith("Card"), c)
+        }
+    </div>
+
+    <div class="list-create-card-block" style="display:none">
+        <textarea></textarea>
+        <br/>
+        <a class="btn btn-success list-create-card-button">@Agile.Entities.CardMessage.Create.NiceToString()</a>
+        <a type="button" class="btn btn-default list-create-card-cancel">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+    </div>
+    <a class="list-add-card">
+        @Agile.Entities.CardMessage.CreateCard.NiceToString()
+    </a>
+</div>

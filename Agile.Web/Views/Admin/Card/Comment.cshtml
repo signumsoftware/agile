@@ -1,0 +1,9 @@
+@using Agile.Entities;
+
+@using (var cc = Html.TypeContext<CommentEntity>())
+{
+    @Html.EntityLine(cc, c => c.User)
+    @Html.ValueLine(cc, c => c.CreationDate)
+    @Html.EntityLine(cc, c => c.Card)
+    @Html.ValueLine(cc, c => c.Text)
+}

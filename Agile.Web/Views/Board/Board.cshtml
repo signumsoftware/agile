@@ -1,0 +1,21 @@
+﻿@using Agile.Logic
+@using Agile.Web.Board
+@model BoardInfo
+@Html.AntiForgeryToken()
+@Html.ScriptCss("~/Content/board.css")
+
+<div class="board" data-card="@Model.Lite.Key()">
+    <h2><a href="@Navigator.NavigateRoute(Model.Lite)">@Model.Name</a></h2>
+    <div class="board-lists">
+        @foreach (var l in Model.List)
+        {
+            @Html.Partial(BoardClient.ViewClientPrefix.FormatWith("List"), l)
+        }
+    </div>
+</div>
+
+<script>
+    @BoardClient.BoardModule["init"]()
+    @BoardClient.BoardModule["initList"]()
+    @BoardClient.BoardModule["initCard"]()
+</script>

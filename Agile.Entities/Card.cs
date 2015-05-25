@@ -1,8 +1,10 @@
 ﻿using Signum.Entities;
+using Signum.Entities.Authorization;
 using Signum.Entities.Files;
 using Signum.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -23,17 +25,17 @@ namespace Agile.Entities
         }
 
         [NotNullable, SqlDbType(Size = 100)]
-        string name;
+        string title;
         [StringLengthValidator(AllowNulls = false, Min = 3, Max = 100)]
-        public string Name
+        public string Title
         {
-            get { return name; }
-            set { SetToStr(ref name, value); }
+            get { return title; }
+            set { SetToStr(ref title, value); }
         }
 
-        [NotNullable, SqlDbType(Size = int.MaxValue)]
+        [SqlDbType(Size = int.MaxValue)]
         string description;
-        [StringLengthValidator(AllowNulls = false, Min = 3, Max = int.MaxValue)]
+        [StringLengthValidator(AllowNulls = true, Min = 3, Max = int.MaxValue)]
         public string Description
         {
             get { return description; }
@@ -63,16 +65,7 @@ namespace Agile.Entities
             set { Set(ref tags, value); }
         }
 
-        [NotNullable, PreserveOrder]
-        MList<AttachmentEntity> attachment = new MList<AttachmentEntity>();
-        [NotNullValidator, NoRepeatValidator]
-        public MList<AttachmentEntity> Attachment
-        {
-            get { return attachment; }
-            set { Set(ref attachment, value); }
-        }
-
-        static Expression<Func<CardEntity, string>> ToStringExpression = e => e.name;
+        static Expression<Func<CardEntity, string>> ToStringExpression = e => e.title;
         public override string ToString()
         {
             return ToStringExpression.Evaluate(this);
@@ -99,17 +92,70 @@ namespace Agile.Entities
         public static readonly FileTypeSymbol Attachment = new FileTypeSymbol();
     }
 
-    [Serializable]
-    public class AttachmentEntity : EmbeddedEntity
+
+    [Serializable, EntityKind(EntityKind.System, EntityData.Transactional)]
+    public class CardTransitionEntity : Entity
     {
-        [NotNullable]
-        FilePathEntity file;
-        [NotNullValidator]
-        public FilePathEntity File
+        DateTime creationDate = TimeZoneManager.Now;
+        public DateTime CreationDate
         {
-            get { return file; }
-            set { Set(ref file, value); }
+            get { return creationDate; }
+            private set { Set(ref creationDate, value); }
         }
 
+        Lite<UserEntity> user;
+        public Lite<UserEntity> User
+        {
+            get { return user; }
+            set { Set(ref user, value); }
+        }
+
+        [NotNullable]
+        Lite<CardEntity> card;
+        [NotNullValidator]
+        public Lite<CardEntity> Card
+        {
+            get { return card; }
+            set { Set(ref card, value); }
+        }
+
+        [NotNullable]
+        Lite<ListEntity> from;
+        [NotNullValidator]
+        public Lite<ListEntity> From
+        {
+            get { return from; }
+            set { Set(ref from, value); }
+        }
+
+        decimal fromOrder;
+        public decimal FromOrder
+        {
+            get { return fromOrder; }
+            set { Set(ref fromOrder, value); }
+        }
+
+        [NotNullable]
+        Lite<ListEntity> to;
+        [NotNullValidator]
+        public Lite<ListEntity> To
+        {
+            get { return to; }
+            set { Set(ref to, value); }
+        }
+
+        decimal toOrder;
+        public decimal ToOrder
+        {
+            get { return toOrder; }
+            set { Set(ref toOrder, value); }
+        }
+    }
+
+    public enum CardMessage
+    {
+        [Description("Create card...")]
+        CreateCard,
+        Create
     }
 }

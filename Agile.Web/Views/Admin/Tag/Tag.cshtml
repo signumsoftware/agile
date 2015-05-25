@@ -1,0 +1,8 @@
+@using Agile.Entities;
+
+@using (var tc = Html.TypeContext<TagEntity>())
+{
+    @Html.EntityLine(tc, t => t.Board)
+    @Html.ValueLine(tc, t => t.Name)
+    @Html.ValueLine(tc, t => t.Color)
+}

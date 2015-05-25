@@ -1,0 +1,7 @@
+﻿@using Agile.Entities
+
+@using (var tc = Html.TypeContext<AttachmentRepositoryEntity>())
+{
+    @Html.ValueLine(tc, t => t.PhysicalPrefix)
+    @Html.ValueLine(tc, t => t.WebPrefix)
+}

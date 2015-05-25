@@ -20,11 +20,11 @@ namespace Agile.Entities
             set { Set(ref user, value); }
         }
 
-        bool sendEmail;
-        public bool SendEmail
+        SubscriptionMethod method;
+        public SubscriptionMethod Method
         {
-            get { return sendEmail; }
-            set { Set(ref sendEmail, value); }
+            get { return method; }
+            set { Set(ref method, value); }
         }
 
         [ImplementedBy(typeof(ListEntity), typeof(BoardEntity), typeof(CardEntity))]
@@ -35,6 +35,12 @@ namespace Agile.Entities
             get { return target; }
             set { Set(ref target, value); }
         }
+    }
+
+    public enum SubscriptionMethod
+    {
+        Internal,
+        Email,
     }
 
     public interface ISubscriptionTarget : IEntity

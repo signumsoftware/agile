@@ -15,6 +15,7 @@ using Agile.Entities;
 using Signum.Entities.Files;
 using Signum.Engine.Files;
 using System.IO;
+using Signum.Entities.Authorization;
 
 namespace Agile.Logic
 {
@@ -27,6 +28,36 @@ namespace Agile.Logic
             return CardsExpression.Evaluate(e);
         }
 
+        static Expression<Func<CardEntity, IQueryable<CardTransitionEntity>>> CardTransitionsExpression =
+            c => Database.Query<CardTransitionEntity>().Where(ct => ct.Card.RefersTo(c));
+        public static IQueryable<CardTransitionEntity> CardTransitions(this CardEntity c)
+        {
+            return CardTransitionsExpression.Evaluate(c);
+        }
+
+        static Expression<Func<CardEntity, CardInfo>> ToCardInfoExpression =
+            c => new CardInfo
+            {
+                Lite = c.ToLite(),
+                Title = c.Title,
+                Attachments = c.Attachments().Count(),
+                HasDescription = c.Description.HasText(),
+                Comments = c.Comments().Count(),
+                Tags = c.Tags.ToList(),
+                FirstImage = c.Attachments().OrderBy(a=>a.CreationDate).Where(a=>a.Type == AttachmentType.Image).Select(a=>a.File).FirstOrDefault(),
+                Subscription = c.SubscriptionMethod(),
+            }; 
+        public static CardInfo ToCardInfo(this CardEntity c)
+        {
+            return ToCardInfoExpression.Evaluate(c);
+        }
+
+        static Expression<Func<CardTransitionEntity, CardTransitionInfo>> ToCardTransitionInfoExpression =
+            ct => new CardTransitionInfo { CreationDate = ct.CreationDate, Entity = ct.ToLite(), From = ct.From, To = ct.To, User = ct.User }; 
+        public static CardTransitionInfo ToCardTransitionInfo(this CardTransitionEntity ct)
+        {
+            return ToCardTransitionInfoExpression.Evaluate(ct);
+        }
 
         public static void Start(SchemaBuilder sb, DynamicQueryManager dqm)
         {
@@ -35,17 +66,36 @@ namespace Agile.Logic
                 sb.Include<CardEntity>();
                 sb.AddUniqueIndex((CardEntity e) => new { e.List, e.Order });
 
+                sb.Include<CardTransitionEntity>();
+
+
                 dqm.RegisterQuery(typeof(CardEntity), () =>
                     from c in Database.Query<CardEntity>()
                     select new
                     {
                         Entity = c,
                         c.Id,
-                        c.Name,
+                        Name = c.Title,
                         c.Archived,
                         c.Order,
                         c.List,
                     });
+
+
+                dqm.RegisterQuery(typeof(CardTransitionEntity), () =>
+                    from c in Database.Query<CardTransitionEntity>()
+                    select new
+                    {
+                        Entity = c,
+                        c.Id,
+                        c.Card,
+                        c.User,
+                        c.From,
+                        c.FromOrder,
+                        c.To,
+                        c.ToOrder,
+                    });
+     
      
                 dqm.RegisterExpression((ListEntity l) => l.Cards(), () => typeof(CardEntity).NicePluralName());
 
@@ -53,7 +103,11 @@ namespace Agile.Logic
                 {
                     AllowsNew = true,
                     Lite = false,
-                    Execute = (c, _) => { }
+                    Execute = (c, _) =>
+                    {
+                        if (c.IsNew)
+                            c.Order = (c.List.InDB().SelectMany(a => a.Cards()).Max(a => (decimal?)a.Order) ?? -1) + 1;
+                    }
                 }.Register();
 
                 new Graph<CardEntity>.Execute(CardOperation.Archive)
@@ -65,29 +119,31 @@ namespace Agile.Logic
                 {
                     Execute = (c, args) => 
                     {
+                        var trans = new CardTransitionEntity
+                        {
+                            Card = c.ToLite(),
+                            User = UserEntity.Current.ToLite(),
+                            From = c.List,
+                            FromOrder = c.Order,
+                        };
+
                         var ops = args.GetArg<CardMoveOptions>();
 
                         c.List = ops.List;
 
                         SetOrder(c, ops);
+
+                        trans.To = c.List;
+                        trans.ToOrder = c.Order;
+
+                        trans.Save();
                     }
                 }.Register();
 
                 new Graph<CardEntity>.ConstructFrom<ListEntity>(CardOperation.CreateCardFromBoard)
                 {
-                    Construct = (l, _) => new CardEntity { List = l.ToLite() }
+                    Construct = (l, args) => new CardEntity { List = l.ToLite(), Title = args.TryGetArgC<string>()}
                 }.Register();
-
-
-                FilePathLogic.Register(AttachmentFileType.Attachment, new FileTypeAlgorithm
-                {
-                    GetPrefixPair = fp =>
-                    {
-                        var first = Starter.Configuration.Value.Repositories.FirstEx(r => File.Exists(Path.Combine(r.PhysicalPrefix, fp.Sufix)));
-
-                        return new PrefixPair(first.PhysicalPrefix) { WebPrefix = first.WebPrefix };
-                    }
-                });
             }
         }
 
@@ -110,6 +166,29 @@ namespace Agile.Logic
                     .Set(a => a.Order, a => a.Order + 1)
                     .Execute();
             }
+        }
+    }
+
+    public class CardInfo
+    {
+        public Lite<CardEntity> Lite;
+        public string Title;
+        public bool HasDescription;
+        public int Comments;
+        public int Attachments;
+        public FilePathEntity FirstImage;
+        public List<TagEntity> Tags;
+        public SubscriptionMethod? Subscription;
+    }
+
+    public class CardTransitionInfo : HistoryInfo
+    {
+        public Lite<ListEntity> From;
+        public Lite<ListEntity> To;
+
+        public override string ToString()
+        {
+            return HistoryMessage.moved.NiceToString();
         }
     }
 }

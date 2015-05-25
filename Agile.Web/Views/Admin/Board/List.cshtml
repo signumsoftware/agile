@@ -1,0 +1,14 @@
+@using Agile.Entities;
+
+@using (var lc = Html.TypeContext<ListEntity>())
+{
+    @Html.ValueLine(lc, l => l.Name)
+    @Html.ValueLine(lc, l => l.Archived)
+    @Html.ValueLine(lc, l => l.Order)
+    @Html.EntityLine(lc, l => l.Board)
+
+    if (!lc.Value.IsNew)
+    {
+        @Html.SearchControl(new FindOptions(typeof(CardEntity), "List", lc.Value).RemovePagination(), new Context(lc, "b"))
+    }
+}

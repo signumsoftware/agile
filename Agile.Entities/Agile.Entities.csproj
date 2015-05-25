@@ -46,9 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attachment.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="Card.cs" />
-    <Compile Include="Attachment.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="List.cs" />
     <Compile Include="Notification.cs" />

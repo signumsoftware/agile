@@ -46,6 +46,12 @@ using Signum.Engine.Basics;
 using Signum.Web.Help;
 using Signum.Web.Word;
 using Signum.Web.Maps;
+using Signum.Web.DiffLog;
+using Agile.Web.Project;
+using Agile.Web.Notification;
+using Agile.Web.Tag;
+using Agile.Web.Card;
+using Agile.Web.Board;
 
 namespace Agile.Web
 {
@@ -129,6 +135,8 @@ namespace Agile.Web
                 operations: true,
                 permissions: true);
 
+            DiffLogClient.Start();
+
             MailingClient.Start(
                 newsletter: false, 
                 pop3Config: false);
@@ -158,6 +166,13 @@ namespace Agile.Web
             CacheClient.Start();
 
             ProfilerClient.Start();
+            
+            AgileClient.Start();
+            ProjectClient.Start();
+            BoardClient.Start();
+            CardClient.Start();
+            TagClient.Start();
+            NotificationClient.Start();
 
             ScriptHtmlHelper.Manager.MainAssembly = typeof(AgileClient).Assembly;
             SignumControllerFactory.MainAssembly = typeof(AgileClient).Assembly;

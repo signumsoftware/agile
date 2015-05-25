@@ -29,7 +29,7 @@ namespace Agile.Logic
         static Expression<Func<ISubscriptionTarget, IQueryable<NotificationEntity>>> NotificationsTargetExpression =
             target => Database.Query<NotificationEntity>().Where(n => n.Target.RefersTo(target));
         [ExpressionField("NotificationsTargetExpression")]
-        public static IQueryable<NotificationEntity> Notification(this ISubscriptionTarget target)
+        public static IQueryable<NotificationEntity> Notifications(this ISubscriptionTarget target)
         {
             return NotificationsTargetExpression.Evaluate(target);
         }
@@ -48,6 +48,13 @@ namespace Agile.Logic
         {
             return SubscriptionsTargetExpression.Evaluate(target);
         }
+
+        static Expression<Func<ISubscriptionTarget, SubscriptionMethod?>> SubscriptionMethodExpression =
+            c => c.Subscriptions().Where(s => s.User.RefersTo(UserEntity.Current)).Select(a => (SubscriptionMethod?)a.Method).SingleOrDefault(); 
+        public static SubscriptionMethod? SubscriptionMethod(this ISubscriptionTarget c)
+        {
+            return SubscriptionMethodExpression.Evaluate(c);
+        }
     
         public static void Start(SchemaBuilder sb, DynamicQueryManager dqm)
         {
@@ -55,6 +62,7 @@ namespace Agile.Logic
             {
                 sb.Include<NotificationEntity>();
                 sb.Include<SubscriptionEntity>();
+                sb.AddUniqueIndex((NotificationEntity n) => new { n.User, n.Target });
         
                 dqm.RegisterQuery(typeof(NotificationEntity), () =>
                     from n in Database.Query<NotificationEntity>()
@@ -80,6 +88,10 @@ namespace Agile.Logic
         
                 dqm.RegisterExpression((UserEntity u) => u.Notifications(), () => typeof(NotificationEntity).NicePluralName());
                 dqm.RegisterExpression((UserEntity u) => u.Subscriptions(), () => typeof(SubscriptionEntity).NicePluralName());
+
+                dqm.RegisterExpression((ISubscriptionTarget u) => u.Notifications(), () => typeof(NotificationEntity).NicePluralName());
+                dqm.RegisterExpression((ISubscriptionTarget u) => u.Subscriptions(), () => typeof(SubscriptionEntity).NicePluralName());
+                dqm.RegisterExpression((ISubscriptionTarget u) => u.SubscriptionMethod(), () => typeof(SubscriptionMethod).NiceName());
             }
         }
 
@@ -97,7 +109,7 @@ namespace Agile.Logic
                     User = gr.Key,
                 }.Save();
 
-                if (gr.Any(a => a.SendEmail))
+                if (gr.Any(a => a.Method == Entities.SubscriptionMethod.Email))
                 {
                     new CardNotificationEmail(card)
                     {

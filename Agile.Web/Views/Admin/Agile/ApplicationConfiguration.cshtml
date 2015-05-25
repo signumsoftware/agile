@@ -8,4 +8,5 @@
         @Html.EmbeddedControl(tc, c => c.Email)
         @Html.EntityLine(tc, c => c.SmtpConfiguration)
     </fieldset>
+    @Html.EntityRepeater(tc, t => t.Repositories)
 }

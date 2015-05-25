@@ -22,14 +22,14 @@ namespace Agile.Entities
             set { SetToStr(ref name, value); }
         }
 
-        int removed;
-        public int Removed
+        bool archived;
+        public bool Archived
         {
-            get { return removed; }
-            set { Set(ref removed, value); }
+            get { return archived; }
+            set { Set(ref archived, value); }
         }
 
-        [NotNullable, PreserveOrder]
+        [NotNullable]
         MList<Lite<UserEntity>> members = new MList<Lite<UserEntity>>();
         [NotNullValidator, NoRepeatValidator]
         public MList<Lite<UserEntity>> Members

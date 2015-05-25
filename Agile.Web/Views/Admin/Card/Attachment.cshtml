@@ -1,0 +1,11 @@
+@using Agile.Entities;
+@using Signum.Web.Files;
+
+@using (var ac = Html.TypeContext<AttachmentEntity>())
+{
+    @Html.EntityLine(ac, a => a.Card)
+    @Html.EntityLine(ac, a => a.User)
+    @Html.ValueLine(ac, a => a.CreationDate)
+    @Html.FileLine(ac, a => a.File, fl=>fl.FileType = AttachmentFileType.Attachment)
+    @Html.ValueLine(ac, a => a.Type)
+}

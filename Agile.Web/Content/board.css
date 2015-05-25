@@ -1,0 +1,89 @@
+.board {
+}
+
+.board-lists {
+    display: flex;
+}
+
+.list {
+    padding: 5px 5px;
+    background: #e2e4e6;
+    border-radius: 3px;
+    box-sizing: border-box;
+    margin: 0 5px;
+    min-width: 270px;
+    max-height: 100%;
+}
+
+    .list h4 {
+        display: inline;
+        font-size: 15px;
+        line-height: 18px;
+        min-height: 19px;
+        min-width: 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        font-weight: bold;
+    }
+
+.list-cards {
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+}
+
+
+.list-create-card-block textarea {
+    width: 100%;
+    border: 0px;
+    border-radius: 5px;
+    margin-top: 5px;
+    resize: none;
+}
+
+
+.card {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    max-width: 260px;
+    min-height: 20px;
+    position: relative;
+    z-index: 0;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.card-icons {
+    list-style: none;
+    height: 10px;
+    padding: 0px;
+    color: #bbb;
+    font-size: 12px;
+}
+
+    .card-icons li {
+        float: left;
+        margin: 5px;
+    }
+
+
+.card-tags {
+    list-style: none;
+    padding: 0px;
+}
+
+    .card-tag {
+        float: left;
+        height: 8px;
+        width: 30px;
+        border-radius: 4px;
+        margin-right: 4px;
+    }
+
+.card-image img {
+  width: 100%;
+  margin-bottom: 5px;
+}

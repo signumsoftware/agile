@@ -4,7 +4,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion></ProductVersion>
+    <ProductVersion>
+    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8DC5845A-3C2A-4EF4-8BEC-F22E8C78FC31}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -14,9 +15,11 @@
     <AssemblyName>Agile.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>true</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
-    <FileUpgradeFlags></FileUpgradeFlags>
-    <UpgradeBackupLocation></UpgradeBackupLocation>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -106,6 +109,12 @@
     <Compile Include="Code\AgileClient.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Code\BoardClient.cs" />
+    <Compile Include="Code\CardClient.cs" />
+    <Compile Include="Code\NotificationClient.cs" />
+    <Compile Include="Code\ProjectClient.cs" />
+    <Compile Include="Code\TagClient.cs" />
+    <Compile Include="Controllers\BoardController.cs" />
     <Compile Include="Controllers\HomeController.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -125,7 +134,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\board.css" />
     <Content Include="Content\site.css" />
+    <Content Include="Files\berlin2.jpg" />
     <Content Include="Service References\BingTranslationService\Agile.Web.BingTranslationService.GetTranslationsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -365,6 +376,19 @@
     <Content Include="Libs\require.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Views\Admin\Board\Board.cshtml" />
+    <Content Include="Views\Admin\Board\List.cshtml" />
+    <Content Include="Views\Admin\Card\Comment.cshtml" />
+    <Content Include="Views\Admin\Project\Project.cshtml" />
+    <Content Include="Views\Admin\Tag\Tag.cshtml" />
+    <Content Include="Views\Admin\Card\Attachment.cshtml" />
+    <Content Include="Views\Admin\Card\Card.cshtml" />
+    <Content Include="Views\Admin\Notification\Notification.cshtml" />
+    <Content Include="Views\Admin\Notification\Subscription.cshtml" />
+    <Content Include="Views\Board\Board.cshtml" />
+    <Content Include="Views\Board\List.cshtml" />
+    <Content Include="Views\Board\Card.cshtml" />
+    <Content Include="Views\Admin\Agile\AttachmentRepository.cshtml" />
     <TypeScriptCompile Include="Scripts\Agile.ts" />
     <None Include="Service References\BingTranslationService\configuration91.svcinfo" />
     <None Include="Service References\BingTranslationService\configuration.svcinfo" />
@@ -381,6 +405,11 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <TypeScriptCompile Include="Scripts\Board.ts" />
+    <TypeScriptCompile Include="Scripts\Comment.ts" />
+    <TypeScriptCompile Include="Scripts\Notification.ts" />
+    <TypeScriptCompile Include="Scripts\Project.ts" />
+    <TypeScriptCompile Include="Scripts\Tag.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
@@ -443,7 +472,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Views\Agile\ApplicationConfiguration.cshtml" />
+    <Content Include="Views\Admin\Agile\ApplicationConfiguration.cshtml" />
     <None Include="Service References\BingTranslationService\soap.wsdl" />
     <None Include="Service References\BingTranslationService\soap.xsd">
       <SubType>Designer</SubType>
@@ -495,14 +524,15 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>7654</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:7654/</IISUrl>
+          <IISUrl>http://localhost/Agile.Web</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl></CustomServerUrl>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

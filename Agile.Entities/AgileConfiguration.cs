@@ -81,4 +81,5 @@ namespace Agile.Entities
         public static TypeConditionSymbol RoleEntities = new TypeConditionSymbol();
         public static TypeConditionSymbol MyProjects = new TypeConditionSymbol();
     }
+
 }

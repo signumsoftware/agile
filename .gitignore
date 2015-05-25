@@ -32,3 +32,4 @@ Agile.Web/Translations
 packages/*
 !packages/repositories.config
 Agile.Web/Scripts/**/*.js
+Agile.Web/Files/

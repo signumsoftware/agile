@@ -12,6 +12,7 @@ using Signum.Engine.Operations;
 using Signum.Engine.Maps;
 using Signum.Engine.DynamicQuery;
 using Agile.Entities;
+using Signum.Entities.Authorization;
 
 namespace Agile.Logic
 {
@@ -22,6 +23,19 @@ namespace Agile.Logic
         public static IQueryable<CommentEntity> Comments(this CardEntity e)
         {
             return CommentsExpression.Evaluate(e);
+        }
+
+        static Expression<Func<CommentEntity, CommentInfo>> ToCommentInfoExpression =
+            c => new CommentInfo
+            {
+                 Entity = c.ToLite(),
+                 Text = c.Text,
+                 CreationDate = c.CreationDate,
+                 User = c.User,
+            }; 
+        public static CommentInfo ToCommentInfo(this CommentEntity c)
+        {
+            return ToCommentInfoExpression.Evaluate(c);
         }
     
         public static void Start(SchemaBuilder sb, DynamicQueryManager dqm)
@@ -60,5 +74,22 @@ namespace Agile.Logic
         
             }
         }
+    }
+
+    public class CommentInfo : HistoryInfo
+    {
+        public string Text;
+
+        public override string ToString()
+        {
+            return HistoryMessage.commented.NiceToString();
+        }
+    }
+
+    public class HistoryInfo 
+    {
+        public Lite<Entity> Entity;
+        public Lite<UserEntity> User;
+        public DateTime CreationDate;
     }
 }
