@@ -45,8 +45,6 @@ namespace Agile.Web.Card
                     },
                     new EntityOperationSettings<CardEntity>(CardOperation.Delete){ HideOnCanExecute = true },
                     new EntityOperationSettings<CardEntity>(CardOperation.Move){ IsVisible = a => false },
-                    new EntityOperationSettings<CardEntity>(CommentOperation.CreateCommentFromCard){ IsVisible = a => false },
-                    new EntityOperationSettings<CardEntity>(AttachmentOperation.CreateAttachmentFromCard){ IsVisible = a => false },
                 });
             }
         }

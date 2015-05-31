@@ -62,20 +62,8 @@ namespace Agile.Logic
                     Lite = false,
                     Execute = (c, _) => { }
                 }.Register();
-                
-                new Graph<CommentEntity>.ConstructFrom<CardEntity>(CommentOperation.CreateCommentFromCard)
-                {
-                    Construct = (c, _) => new CommentEntity
-                    {
-                        User = UserEntity.Current.ToLite(),
-                        Card = c.ToLite(),
-                    }
-                }.Register();
-
 
                 Schema.Current.EntityEvents<CardEntity>().PreUnsafeDelete += query => query.SelectMany(q => q.Attachments()).UnsafeDelete();
-                
-        
             }
         }
     }

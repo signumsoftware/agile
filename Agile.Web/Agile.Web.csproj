@@ -137,6 +137,7 @@
   <ItemGroup>
     <Content Include="Content\board.css" />
     <Content Include="Content\site.css" />
+    <Content Include="Content\spinner.gif" />
     <Content Include="Files\berlin2.jpg" />
     <Content Include="Service References\BingTranslationService\Agile.Web.BingTranslationService.GetTranslationsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

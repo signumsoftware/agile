@@ -198,6 +198,8 @@ namespace Agile.Entities
         [Description("Create card...")]
         CreateCard,
         Create,
-        Comment
+        Comment,
+        DropHere,
+        Uploading,
     }
 }

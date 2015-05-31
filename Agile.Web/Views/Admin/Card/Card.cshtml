@@ -7,27 +7,28 @@
 
 @using (var cc = Html.TypeContext<CardEntity>())
 {
-    <div class="row">
-        <div class="col-sm-9">
-            @Html.ValueLine(cc, c => c.Title)
-            <div class="col-sm-12">
-                @Html.ValueLine(cc, c => c.Description, vl =>
+    <div class="drop-target">
+        <div class="row">
+            <div class="col-sm-9">
+                @Html.ValueLine(cc, c => c.Title)
+                <div class="col-sm-12">
+                    @Html.ValueLine(cc, c => c.Description, vl =>
        {
            vl.ValueLineType = ValueLineType.TextArea;
            vl.FormGroupStyle = FormGroupStyle.SrOnly;
            vl.ValueHtmlProps.Add("style", "width:100%;height:120px;");
        })
+                </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            @using (var sc = cc.SubContext())
-            {
-                sc.LabelColumns = new BsColumn(5);
-                if (sc.Value.State == ArchivedState.Archived)
+            <div class="col-sm-3">
+                @using (var sc = cc.SubContext())
                 {
-                    @Html.ValueLine(sc, c => c.State, vl => { vl.ReadOnly = true; vl.WriteHiddenOnReadonly = true; })
-                }
-                @Html.EntityListCheckbox(sc, c => c.Tags, elb =>
+                    sc.LabelColumns = new BsColumn(5);
+                    if (sc.Value.State == ArchivedState.Archived)
+                    {
+                        @Html.ValueLine(sc, c => c.State, vl => { vl.ReadOnly = true; vl.WriteHiddenOnReadonly = true; })
+                    }
+                    @Html.EntityListCheckbox(sc, c => c.Tags, elb =>
                 {
                     elb.AttachFunction = CardClient.CardModule["attachTags"](elb);
                     elb.CustomizeLabel = (htmlTag, lite) =>
@@ -38,34 +39,49 @@
                             (sc.Value.Tags.Any(lite.RefersTo) ? ";background-color:" + color + ";color:white" : null));
                     };
                 });
-            }
+                }
+            </div>
         </div>
-    </div>
 
-    if(!cc.Value.IsNew)
-    {
-        <hr />
+        @if (!cc.Value.IsNew)
+        {
 
-        <div class="comment row">
-            <div class="col-sm-9">
-                <span style="color:@(ChartColorLogic.ColorFor(UserEntity.Current).TryToHtml() ?? "gray")" class="history-user">@UserEntity.Current</span>
-                <textarea id="@cc.Compose("CommentText")" style="height: 80px;"></textarea>
-            </div>
-            <div class="col-sm-3">
-                <br/>
-                <a class="btn btn-success list-create-card-button" id="@cc.Compose("CreateComment")">@Agile.Entities.CardMessage.Comment.NiceToString()</a>
-            </div>
+            <hr />
             <script>
-                @CardClient.CardModule["createComment"]( 
+                @CardClient.CardModule["uploadDocument"](
+                Url.Action((Agile.Web.Controllers.CardController c)=>c.UploadDropped(cc.Value.ToLite())),
+                cc.Compose("HistoryContainer"))
+            </script>
+            <div class="drop-here" style="display:none">
+                @CardMessage.DropHere.NiceToString()
+            </div>
+            <div class="drop-uploading" style="display:none">
+                <img src="~/Content/spinner.gif" />
+                @(CardMessage.Uploading.NiceToString())...
+            </div>
+
+
+            <div class="comment row">
+                <div class="col-sm-9">
+                    <span style="color:@(ChartColorLogic.ColorFor(UserEntity.Current).TryToHtml() ?? "gray")" class="history-user">@UserEntity.Current</span>
+                    <textarea id="@cc.Compose("CommentText")" style="height: 80px;"></textarea>
+                </div>
+                <div class="col-sm-3">
+                    <br />
+                    <a class="btn btn-success list-create-card-button" id="@cc.Compose("CreateComment")">@Agile.Entities.CardMessage.Comment.NiceToString()</a>
+                </div>
+                <script>
+                    @CardClient.CardModule["createComment"](
                 Url.Action((Agile.Web.Controllers.CardController c)=>c.AddComment(cc.Value.ToLite())),
                 cc.Compose("CreateComment"),
                 cc.Compose("CommentText"),
                 cc.Compose("HistoryContainer"))
-            </script>
-        </div>
+                </script>
+            </div>
 
-    <div id="@cc.Compose("HistoryContainer")">
-        @Html.Partial(CardClient.ViewPrefix.FormatWith("CardHistory"), cc.Value)
+            <div id="@cc.Compose("HistoryContainer")">
+                @Html.Partial(CardClient.ViewPrefix.FormatWith("CardHistory"), cc.Value)
+            </div>
+        }
     </div>
-    }
 }

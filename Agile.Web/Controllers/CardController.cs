@@ -5,12 +5,16 @@ using Agile.Web.Card;
 using Signum.Engine;
 using Signum.Engine.Operations;
 using Signum.Entities;
+using Signum.Entities.Authorization;
+using Signum.Entities.Files;
 using Signum.Entities.Reflection;
 using Signum.Utilities;
 using Signum.Web;
+using Signum.Web.Files;
 using Signum.Web.Operations;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -48,13 +52,36 @@ namespace Agile.Web.Controllers
         {
             var cardEntity = card.Retrieve();
 
-            var comment = cardEntity.ConstructFrom(CommentOperation.CreateCommentFromCard);
-
-            comment.Text = this.ParseValue<string>("text");
-
-            comment.Execute(CommentOperation.Save);
+            var comment = new CommentEntity
+            {
+                User = UserEntity.Current.ToLite(),
+                Card = cardEntity.ToLite(),
+                Text = this.ParseValue<string>("text")
+            }.Execute(CommentOperation.Save);
 
             return this.PartialView(CardClient.ViewPrefix.FormatWith("CardHistory"), cardEntity);
+        }
+
+        [HttpPost]
+        public ActionResult UploadDropped(Lite<CardEntity> card)
+        {
+            string fileName = Request.Headers["X-FileName"];
+            byte[] bytes = Request.InputStream.ReadAllBytes();
+
+            var bla = new AttachmentEntity
+            {
+                Card = card,
+                User = UserEntity.Current.ToLite(),
+                Type = IsImage(Path.GetExtension(fileName).ToLower()) ? AttachmentType.Image : AttachmentType.File,
+                File = new FilePathEntity(AttachmentFileType.Attachment, fileName, bytes)
+            }.Execute(AttachmentOperation.Save);
+
+            return this.PartialView(CardClient.ViewPrefix.FormatWith("CardHistory"), card.Retrieve());
+        }
+
+        private bool IsImage(string extension)
+        {
+            return extension == ".jpg" || extension == ".png" || extension == ".gif";
         }
     }
 }

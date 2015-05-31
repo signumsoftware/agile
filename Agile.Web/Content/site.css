@@ -100,12 +100,30 @@ span.history-transition {
     border-radius: 5px;
 }
 
-span.history-transition.warning {
-  color: #fff;
-  background-color: #f0ad4e;
-  border-color: #eea236;
-}
+    span.history-transition.warning {
+        color: #fff;
+        background-color: #f0ad4e;
+        border-color: #eea236;
+    }
 
 .comment textarea {
-  width: 100%;
+    width: 100%;
+}
+
+.drop-here {
+    background: lightblue;
+    border: 2px dashed rgb(62, 94, 105);
+    text-align: center;
+    font-size: 20px;
+    padding: 10px;
+    color:rgb(62, 94, 105);
+}
+
+.drop-uploading {
+  background: rgb(247, 230, 167);
+  border: 2px dotted rgb(118, 103, 45);
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+  color: rgb(118, 103, 45);
 }

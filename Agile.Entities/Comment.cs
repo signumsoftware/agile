@@ -58,7 +58,6 @@ namespace Agile.Entities
     public static class CommentOperation
     {
         public static readonly ExecuteSymbol<CommentEntity> Save = OperationSymbol.Execute<CommentEntity>();
-        public static readonly ConstructSymbol<CommentEntity>.From<CardEntity> CreateCommentFromCard = OperationSymbol.Construct<CommentEntity>.From<CardEntity>();
     }
 
     public enum HistoryMessage

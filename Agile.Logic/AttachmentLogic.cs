@@ -59,15 +59,6 @@ namespace Agile.Logic
                     Lite = false,
                     Execute = (c, _) => { }
                 }.Register();
-                
-                new Graph<AttachmentEntity>.ConstructFrom<CardEntity>(AttachmentOperation.CreateAttachmentFromCard)
-                {
-                    Construct = (c, _) => new AttachmentEntity
-                    {
-                        User = UserEntity.Current.ToLite(),
-                        Card = c.ToLite(),
-                    }
-                }.Register();
 
                 FilePathLogic.Register(AttachmentFileType.Attachment, new FileTypeAlgorithm
                 {
