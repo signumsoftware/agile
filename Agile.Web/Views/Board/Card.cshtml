@@ -33,14 +33,14 @@
             @if (Model.Comments > 0)
             {
                 <li title="@typeof(CommentEntity).NicePluralName()">
-                    <span class="glyphicon glyphicon-comment" gray></span><span>@Model.Comments</span>
+                    <span class="glyphicon glyphicon-comment" gray></span><span>&nbsp;@Model.Comments</span>
                 </li>
             }
 
             @if (Model.Attachments > 0)
             {
                 <li title="@typeof(AttachmentEntity).NicePluralName()">
-                    <span class="glyphicon glyphicon-paperclip"></span><span>@Model.Attachments</span>
+                    <span class="glyphicon glyphicon-paperclip"></span><span>&nbsp;@Model.Attachments</span>
                 </li>
             }
         </ul>

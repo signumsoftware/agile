@@ -53,7 +53,14 @@ namespace Agile.Logic
         }
 
         static Expression<Func<CardTransitionEntity, CardTransitionInfo>> ToCardTransitionInfoExpression =
-            ct => new CardTransitionInfo { CreationDate = ct.CreationDate, Entity = ct.ToLite(), From = ct.From, To = ct.To, User = ct.User }; 
+            ct => new CardTransitionInfo { 
+                CreationDate = ct.CreationDate, 
+                Entity = ct.ToLite(), 
+                From = ct.From, 
+                To = ct.To,
+                FromPositon = ct.FromPosition,
+                ToPosition = ct.ToPosition, 
+                User = ct.User }; 
         public static CardTransitionInfo ToCardTransitionInfo(this CardTransitionEntity ct)
         {
             return ToCardTransitionInfoExpression.Evaluate(ct);
@@ -264,6 +271,9 @@ namespace Agile.Logic
     {
         public Lite<ListEntity> From;
         public Lite<ListEntity> To;
+
+        public int? ToPosition;
+        public int? FromPositon;
 
         public override string ToString()
         {

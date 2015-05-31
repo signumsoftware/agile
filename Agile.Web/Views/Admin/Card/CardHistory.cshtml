@@ -1,0 +1,71 @@
+﻿@using Agile.Entities;
+@using Agile.Logic;
+@using Signum.Engine.Chart;
+@using Signum.Engine;
+@using Agile.Web.Card;
+@model CardEntity
+@{
+    List<HistoryInfo>
+    history = new List<HistoryInfo>();
+    history.AddRange(Model.Comments().Select(c => c.ToCommentInfo()));
+    history.AddRange(Model.Attachments().Select(c => c.ToAttachmentInfo()));
+    history.AddRange(Model.CardTransitions().Select(c => c.ToCardTransitionInfo()));
+    history.SortDescending(a => a.CreationDate);
+}
+
+@if (history.Any())
+{
+    <div class="history-list">
+        @foreach (var hi in history)
+        {
+            <div class="history-item">
+                <div class="history-item-title">
+                    <span style="color:@(ChartColorLogic.ColorFor(hi.User).TryToHtml() ?? "gray")" class="history-user">@hi.User</span> <span title="@hi.CreationDate.ToString()">@hi.CreationDate.ToAgoString()</span> @hi.ToString()
+                    @if (hi is CardTransitionInfo)
+                    {
+                        var cti = (CardTransitionInfo)hi;
+
+                        var onlyMove = cti.From.Is(cti.To);
+
+                        if (cti.From == null)
+                        {
+                            <span class="history-transition warning">@ArchivedState.Archived.NiceToString()</span>
+                        }
+                        else
+                        {
+                            <span class="history-transition">@cti.From @(onlyMove ? "(" + cti.FromPositon + ")" : null)</span>
+                        }
+                        <span>→</span>
+                        if (cti.To == null)
+                        {
+                            <span class="history-transition warning">@ArchivedState.Archived.NiceToString()</span>
+                        }
+                        else
+                        {
+                            <span class="history-transition">@cti.To @(onlyMove ? "(" + cti.ToPosition + ")" : null)</span>
+                        }
+                    }
+                </div>
+                @if (hi is CommentInfo)
+                {
+                    var ci = (CommentInfo)hi;
+                    <pre style="font: inherit;">@ci.Text</pre>
+                }
+                else if (hi is AttachmentInfo)
+                {
+                    var ai = (AttachmentInfo)hi;
+                    if (ai.Type == AttachmentType.Image)
+                    {
+                        <a href="@Url.Content(ai.File.FullWebPath)">
+                            <img src="@Url.Content(ai.File.FullWebPath)" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Content(ai.File.FullWebPath)" download="@ai.File.FileName" />
+                    }
+                }
+            </div>
+        }
+    </div>
+}

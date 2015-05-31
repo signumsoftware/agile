@@ -391,6 +391,7 @@
     <Content Include="Views\Board\Card.cshtml" />
     <Content Include="Views\Admin\Agile\AttachmentRepository.cshtml" />
     <Content Include="Views\Board\BoardPartial.cshtml" />
+    <Content Include="Views\Admin\Card\CardHistory.cshtml" />
     <TypeScriptCompile Include="Scripts\Agile.ts" />
     <None Include="Service References\BingTranslationService\configuration91.svcinfo" />
     <None Include="Service References\BingTranslationService\configuration.svcinfo" />

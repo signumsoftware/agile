@@ -1,6 +1,7 @@
 ﻿using Agile.Entities;
 using Agile.Logic;
 using Agile.Web.Board;
+using Agile.Web.Card;
 using Signum.Engine;
 using Signum.Engine.Operations;
 using Signum.Entities;
@@ -18,6 +19,7 @@ namespace Agile.Web.Controllers
 {
     public class CardController : Controller
     {
+        [HttpPost]
         public ActionResult Unarchive()
         {
             Lite<ListEntity> list = this.ParseLite<ListEntity>("list");
@@ -39,6 +41,20 @@ namespace Agile.Web.Controllers
             }
             
             return this.DefaultExecuteResult(ctx.Value);
+        }
+
+        [HttpPost]
+        public ActionResult AddComment(Lite<CardEntity> card)
+        {
+            var cardEntity = card.Retrieve();
+
+            var comment = cardEntity.ConstructFrom(CommentOperation.CreateCommentFromCard);
+
+            comment.Text = this.ParseValue<string>("text");
+
+            comment.Execute(CommentOperation.Save);
+
+            return this.PartialView(CardClient.ViewPrefix.FormatWith("CardHistory"), cardEntity);
         }
     }
 }

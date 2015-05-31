@@ -67,6 +67,7 @@ namespace Agile.Logic
                 {
                     Construct = (c, _) => new CommentEntity
                     {
+                        User = UserEntity.Current.ToLite(),
                         Card = c.ToLite(),
                     }
                 }.Register();

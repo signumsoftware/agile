@@ -37,3 +37,19 @@ export function attachTags(entityList: Lines.EntityListCheckbox) {
         }
     });
 }
+
+
+export function createComment(createCommentUrl: string, buttonId: string, textAreaId: string, historyContainerId : string)
+{
+    buttonId.get().click(() => {
+        var val = textAreaId.get().val();
+
+        if (SF.isEmpty(val))
+            return;
+
+        SF.ajaxPost({ url: createCommentUrl, data: {text: val } }).then(html => {
+            historyContainerId.get().empty().append(html);
+        });
+    });
+
+}

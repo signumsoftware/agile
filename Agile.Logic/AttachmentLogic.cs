@@ -15,6 +15,7 @@ using Agile.Entities;
 using Signum.Engine.Files;
 using System.IO;
 using Signum.Entities.Files;
+using Signum.Entities.Authorization;
 
 namespace Agile.Logic
 {
@@ -63,6 +64,7 @@ namespace Agile.Logic
                 {
                     Construct = (c, _) => new AttachmentEntity
                     {
+                        User = UserEntity.Current.ToLite(),
                         Card = c.ToLite(),
                     }
                 }.Register();

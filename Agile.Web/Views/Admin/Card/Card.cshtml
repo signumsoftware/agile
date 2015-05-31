@@ -1,7 +1,9 @@
-@using Agile.Entities;
+﻿@using Agile.Entities;
 @using Agile.Logic;
 @using Signum.Engine.Chart;
 @using Signum.Engine;
+@using Agile.Web.Card;
+@using Signum.Entities.Authorization;
 
 @using (var cc = Html.TypeContext<CardEntity>())
 {
@@ -13,7 +15,7 @@
        {
            vl.ValueLineType = ValueLineType.TextArea;
            vl.FormGroupStyle = FormGroupStyle.SrOnly;
-           vl.ValueHtmlProps.Add("style", "width:100%;height:180px;");
+           vl.ValueHtmlProps.Add("style", "width:100%;height:120px;");
        })
             </div>
         </div>
@@ -27,7 +29,7 @@
                 }
                 @Html.EntityListCheckbox(sc, c => c.Tags, elb =>
                 {
-                    elb.AttachFunction = Agile.Web.Card.CardClient.CardModule["attachTags"](elb);
+                    elb.AttachFunction = CardClient.CardModule["attachTags"](elb);
                     elb.CustomizeLabel = (htmlTag, lite) =>
                     {
                         var color = ((TagEntity)lite.Retrieve()).Color.RGBHex();
@@ -40,50 +42,30 @@
         </div>
     </div>
 
-            List<HistoryInfo> history = new List<HistoryInfo>();
-            history.AddRange(cc.Value.Comments().Select(c => c.ToCommentInfo()));
-            history.AddRange(cc.Value.Attachments().Select(c => c.ToAttachmentInfo()));
-            history.AddRange(cc.Value.CardTransitions().Select(c => c.ToCardTransitionInfo()));
-            history.OrderByDescending(a => a.CreationDate);
+    if(!cc.Value.IsNew)
+    {
+        <hr />
 
-
-            <div class="history-list">
-                @foreach (var hi in history)
-                {
-                    <hr />
-                    <div class="history-item">
-                        <div class="history-item-title">
-                            <span style="color:@(ChartColorLogic.ColorFor(hi.User).TryToHtml() ??"gray")" class="history-user">@hi.User</span> @hi.ToString() <span title="@hi.CreationDate.ToString()">@hi.CreationDate.ToAgoString()</span>
-                        </div>
-                        @if (hi is CommentInfo)
-                        {
-                            var ci = (CommentInfo)hi;
-                            <div class="well well-sm">@ci.Text</div>
-                        }
-                        else if (hi is CardTransitionInfo)
-                        {
-                            var cti = (CardTransitionInfo)hi;
-                            <div>
-                                <span class="history-transition">@cti.From</span>
-                                <span class="glyphicon glyphicon-arrow-right"></span>
-                                <span class="history-transition">@cti.To</span>
-                            </div>
-                        }
-                        else if (hi is AttachmentInfo)
-                        {
-                            var ai = (AttachmentInfo)hi;
-                            if (ai.Type == AttachmentType.Image)
-                            {
-                                <a href="@Url.Content(ai.File.FullWebPath)">
-                                    <img src="@Url.Content(ai.File.FullWebPath)" />
-                                </a>
-                            }
-                            else
-                            {
-                                <a href="@Url.Content(ai.File.FullWebPath)" download="@ai.File.FileName" />
-                            }
-                        }
-                    </div>
-                }
+        <div class="comment row">
+            <div class="col-sm-9">
+                <span style="color:@(ChartColorLogic.ColorFor(UserEntity.Current).TryToHtml() ?? "gray")" class="history-user">@UserEntity.Current</span>
+                <textarea id="@cc.Compose("CommentText")" style="height: 80px;"></textarea>
             </div>
+            <div class="col-sm-3">
+                <br/>
+                <a class="btn btn-success list-create-card-button" id="@cc.Compose("CreateComment")">@Agile.Entities.CardMessage.Comment.NiceToString()</a>
+            </div>
+            <script>
+                @CardClient.CardModule["createComment"]( 
+                Url.Action((Agile.Web.Controllers.CardController c)=>c.AddComment(cc.Value.ToLite())),
+                cc.Compose("CreateComment"),
+                cc.Compose("CommentText"),
+                cc.Compose("HistoryContainer"))
+            </script>
+        </div>
+
+    <div id="@cc.Compose("HistoryContainer")">
+        @Html.Partial(CardClient.ViewPrefix.FormatWith("CardHistory"), cc.Value)
+    </div>
+    }
 }
