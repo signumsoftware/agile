@@ -17,15 +17,47 @@ export function initList(urlCreate: string) {
 
     var board = $("div.board");
 
+    function editMode(addCard : JQuery) {
+        addCard.hide();
+
+        var block = addCard.siblings(".list-create-card-block");
+        block.show();
+        block.children("textarea").focus();
+    }
+
     board.on("click", "a.list-add-card", e=> {
-        $(e.currentTarget).hide();
-        $(e.currentTarget).siblings(".list-create-card-block").show();
+        editMode($(e.currentTarget));
     }); 
 
     board.on("click", "a.list-create-card-cancel", e=> {
         var block = $(e.currentTarget).closest(".list-create-card-block");
         block.hide();
         block.siblings(".list-add-card").show();
+    });
+
+    function createCard(textArea : JQuery) {
+        var list = textArea.closest(".list").attr("data-list");
+
+        var text = textArea.val();
+
+        SF.ajaxPost({
+            url: urlCreate,
+            data: { list: list, text: text }
+        }).then(html=> {
+            textArea.closest(".board").replaceWith($(html));
+
+            editMode($(".list[data-list='" + list + "'] a.list-add-card"));
+        }); 
+    }
+
+    board.on("keydown", "textarea", e=> {
+        if (e.keyCode == 13)
+            createCard($(e.currentTarget));
+    });
+
+    board.on("click", ".list-create-card-button", e=> {
+        var textArea = $(e.currentTarget).closest(".list-create-card-block").children("textarea");
+        createCard(textArea);
     });
 }
 

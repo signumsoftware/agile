@@ -20,5 +20,18 @@ namespace Agile.Web.Controllers
 
             return View(BoardClient.ViewClientPrefix.FormatWith("Board"), info);
         }
+
+        public ActionResult CreateCard()
+        {
+            var list = this.ParseLite<ListEntity>("list").Retrieve();
+            var text = this.ParseValue<string>("text");
+
+            list.ConstructFrom(CardOperation.CreateCardFromList, text).Execute(CardOperation.Save);
+
+            var info = list.Board.InDB(b => b.ToBoardInfo());
+
+            return PartialView(BoardClient.ViewClientPrefix.FormatWith("BoardPartial"), info);
+        }
+
     }
 }

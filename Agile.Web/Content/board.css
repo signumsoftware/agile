@@ -33,6 +33,9 @@
     z-index: 1;
 }
 
+.list-add-card {
+    cursor: pointer;
+}
 
 .list-create-card-block textarea {
     width: 100%;
