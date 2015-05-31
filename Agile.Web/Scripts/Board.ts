@@ -75,3 +75,62 @@ export function initCard() {
 }
 
 
+export function initDrag(urlMove: string) {
+    var board = $("div.board");
+
+    board.on("dragstart", ".card", e => {
+        var de = <DragEvent><Event>e.originalEvent;
+
+        var currentCard = $(e.currentTarget);
+        de.dataTransfer.effectAllowed = "move";
+        de.dataTransfer.setData("Text", currentCard.attr("data-card"));
+
+        currentCard.prev().addClass("avoid-dragging");
+        currentCard.next().addClass("avoid-dragging");
+
+        board.addClass("board-dragging");
+    }); 
+
+    board.on("dragend", ".card", e => {
+        board.removeClass("board-dragging");
+        board.find(".avoid-dragging").removeClass("avoid-dragging");
+    });
+
+    board.on("dragover", ".card-separator:not(.avoid-dragging)", e=> {
+        var de = <DragEvent><Event>e.originalEvent;
+        de.preventDefault();
+
+        var sep = $(e.currentTarget)
+
+        sep.addClass("card-over");
+        de.dataTransfer.dropEffect = "move";
+    });
+
+    board.on("dragleave", ".card-separator:not(.avoid-dragging)", e=> {
+        var de = <DragEvent><Event>e.originalEvent;
+        de.preventDefault();
+        de.dataTransfer.dropEffect = "move";
+
+        $(e.currentTarget).removeClass("card-over");
+    });
+
+    board.on("drop", ".card-separator:not(.avoid-dragging)", e=> {
+        var de = <DragEvent><Event>e.originalEvent;
+        de.preventDefault();
+        var sep = $(e.currentTarget);
+
+        var list = sep.closest(".list").attr("data-list");
+        var card = de.dataTransfer.getData("Text");
+        var next = sep.next().attr("data-card");
+        var prev = sep.prev().attr("data-card");
+
+        SF.ajaxPost({
+            url: urlMove,
+            data: { list: list, card: card, next: next, prev: prev }
+        }).then(html=> {
+            sep.closest(".board").replaceWith($(html));
+        });
+    }); 
+}
+
+

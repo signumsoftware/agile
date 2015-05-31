@@ -3,7 +3,7 @@
 @using Agile.Entities
 @model CardInfo
 
-<div class="card" data-card="@Model.Lite.Key()">
+<div class="card" data-card="@Model.Lite.Key()" draggable="true">
     @if (Model.FirstImage != null)
     {
         <div class="card-image">

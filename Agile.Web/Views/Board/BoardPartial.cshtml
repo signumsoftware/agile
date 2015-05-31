@@ -1,0 +1,22 @@
+﻿@using Agile.Logic
+@using Agile.Web.Board
+@using Agile.Web.Controllers
+@model BoardInfo
+<div class="board" data-board="@Model.Lite.Key()">
+    <h2><a href="@Navigator.NavigateRoute(Model.Lite)">@Model.Name</a></h2>
+    <div class="board-lists">
+        @foreach (var l in Model.List)
+        {
+            <div class="board-list-container">
+                @Html.Partial(BoardClient.ViewClientPrefix.FormatWith("List"), l)
+            </div>
+        }
+    </div>
+    <script>
+    @BoardClient.BoardModule["init"]()
+    @BoardClient.BoardModule["initList"](Url.Action((BoardController a)=>a.CreateCard()))
+    @BoardClient.BoardModule["initCard"]()
+    @BoardClient.BoardModule["initDrag"](Url.Action((BoardController a)=>a.MoveBoard()))
+    </script>
+</div>
+
