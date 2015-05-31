@@ -34,7 +34,7 @@ namespace Agile.Web.Controllers
             return PartialBoard();
         }
 
-        ActionResult PartialBoard()
+        public ActionResult PartialBoard()
         {
             var info = this.ParseLite<BoardEntity>("board").InDB(b => b.ToBoardInfo());
 

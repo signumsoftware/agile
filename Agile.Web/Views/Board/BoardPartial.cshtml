@@ -3,7 +3,7 @@
 @using Agile.Web.Controllers
 @model BoardInfo
 <div class="board" data-board="@Model.Lite.Key()">
-    <h2><a href="@Navigator.NavigateRoute(Model.Lite)">@Model.Name</a> (<a href="@Navigator.NavigateRoute(Model.Projects)">@Model.Projects</a>)</h2>
+    <h2><a href="@Navigator.NavigateRoute(Model.Projects)">@Model.Projects</a> <small>(<a href="@Navigator.NavigateRoute(Model.Lite)">@Model.Name</a>)</small></h2>
     <div class="board-lists">
         @foreach (var l in Model.Lists)
         {
@@ -15,7 +15,7 @@
     <script>
     @BoardClient.BoardModule["init"]()
     @BoardClient.BoardModule["initList"](Url.Action((BoardController a)=>a.CreateCard()))
-    @BoardClient.BoardModule["initCard"](Url.Action((BoardController a) => a.SaveAndRefresh()))
+    @BoardClient.BoardModule["initCard"](Url.Action((BoardController a) => a.SaveAndRefresh()), Url.Action((BoardController a) => a.PartialBoard()))
     @BoardClient.BoardModule["initDrag"](Url.Action((BoardController a)=>a.MoveBoard()))
     </script>
 </div>

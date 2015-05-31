@@ -5,7 +5,6 @@
 
 @using (var cc = Html.TypeContext<CardEntity>())
 {
-
     <div class="row">
         <div class="col-sm-9">
             @Html.ValueLine(cc, c => c.Title)
@@ -21,16 +20,22 @@
         <div class="col-sm-3">
             @using (var sc = cc.SubContext())
             {
-
                 sc.LabelColumns = new BsColumn(5);
-                @Html.EntityLine(sc, c => c.List, vl => { vl.ReadOnly = true; })
                 if (sc.Value.State == ArchivedState.Archived)
                 {
-                    @Html.ValueLine(sc, c => c.State, vl => vl.ReadOnly = true)
+                    @Html.ValueLine(sc, c => c.State, vl => { vl.ReadOnly = true; vl.WriteHiddenOnReadonly = true; })
                 }
-                @Html.ValueLine(sc, c => c.Order)
-                @Html.EntityListCheckbox(sc, c => c.Tags, elb => elb.CustomizeLabel = (tag, lite) =>
-                       tag.Attr("style", "padding:5px;border-radius:5px;color:white;background-color:" + ((TagEntity)lite.Retrieve()).Color.RGBHex()))
+                @Html.EntityListCheckbox(sc, c => c.Tags, elb =>
+                {
+                    elb.AttachFunction = Agile.Web.Card.CardClient.CardModule["attachTags"](elb);
+                    elb.CustomizeLabel = (htmlTag, lite) =>
+                    {
+                        var color = ((TagEntity)lite.Retrieve()).Color.RGBHex();
+
+                        htmlTag.Attr("style", "padding:5px;border-radius:5px;border:1px solid;border-color:" + color +
+                            (sc.Value.Tags.Any(lite.RefersTo) ? ";background-color:" + color + ";color:white" : null));
+                    };
+                });
             }
         </div>
     </div>

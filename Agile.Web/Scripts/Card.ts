@@ -12,9 +12,28 @@ export function unarchive(options: Operations.OperationOptions, findOptions: Fin
 
     return Finder.find(findOptions).then(list=> {
 
-        if (list)// could return null, but we let it continue 
-            options.requestExtraJsonData = { list: list.key() };
+        if (!list)
+            return;
+
+        options.requestExtraJsonData = { list: list.key() };
 
         return Operations.executeDefault(options);
+    });
+}
+
+
+export function attachTags(entityList: Lines.EntityListCheckbox) {
+
+    entityList.element.on("change", "input[type=checkbox]", e=> {
+
+        var label = $(e.currentTarget).closest("label");
+
+        if ($(e.currentTarget).is(":checked")) {
+            label.css("background-color", label.css("border-color"));
+            label.css("color", "white");
+        } else {
+            label.css("background-color", "");
+            label.css("color", "");
+        }
     });
 }
