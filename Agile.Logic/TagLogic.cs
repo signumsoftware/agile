@@ -12,6 +12,7 @@ using Signum.Engine.Operations;
 using Signum.Engine.Maps;
 using Signum.Engine.DynamicQuery;
 using Agile.Entities;
+using Signum.Entities.Basics;
 
 namespace Agile.Logic
 {
@@ -51,7 +52,12 @@ namespace Agile.Logic
 
                 new Graph<TagEntity>.ConstructFrom<BoardEntity>(TagOperation.CreteTagFromBoard)
                 {
-                    Construct = (b, _) => new TagEntity { Board = b.ToLite() }
+                    Construct = (b, args) => new TagEntity 
+                    { 
+                        Board = b.ToLite(),
+                        Name = args.TryGetArgC<string>(),
+                        Color = args.TryGetArgC<ColorEntity>(),
+                    }
                 }.Register();
             }
         }

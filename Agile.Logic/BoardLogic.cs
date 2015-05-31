@@ -85,7 +85,11 @@ namespace Agile.Logic
 
                 new Graph<BoardEntity>.ConstructFrom<ProjectEntity>(BoardOperation.CreateBoardFromProject)
                 {
-                    Construct = (p, args) => new BoardEntity { Project = p.ToLite(), Name = args.TryGetArgC<string>() }
+                    Construct = (p, args) => new BoardEntity
+                    {
+                        Project = p.ToLite(),
+                        Name = args.TryGetArgC<string>()
+                    }
                 }.Register();
 
                 new Graph<BoardEntity>.Execute(BoardOperation.Save)
@@ -103,7 +107,11 @@ namespace Agile.Logic
 
                 new Graph<ListEntity>.ConstructFrom<BoardEntity>(ListOperation.CreateListFromBoard)
                 {
-                    Construct = (b, args) => new ListEntity { Board = b.ToLite(), Name = args.TryGetArgC<string>() }
+                    Construct = (b, args) => new ListEntity
+                    {
+                        Board = b.ToLite(),
+                        Name = args.TryGetArgC<string>()
+                    }
                 }.Register();
 
                 new Graph<ListEntity>.Execute(ListOperation.Save)

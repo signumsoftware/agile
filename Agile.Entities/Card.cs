@@ -77,7 +77,7 @@ namespace Agile.Entities
         public static readonly ExecuteSymbol<CardEntity> Save = OperationSymbol.Execute<CardEntity>();
         public static readonly ExecuteSymbol<CardEntity> Archive = OperationSymbol.Execute<CardEntity>();
         public static readonly ExecuteSymbol<CardEntity> Move = OperationSymbol.Execute<CardEntity>();
-        public static readonly ConstructSymbol<CardEntity>.From<ListEntity> CreateCardFromBoard = OperationSymbol.Construct<CardEntity>.From<ListEntity>();
+        public static readonly ConstructSymbol<CardEntity>.From<ListEntity> CreateCardFromList = OperationSymbol.Construct<CardEntity>.From<ListEntity>();
     }
 
     public class CardMoveOptions

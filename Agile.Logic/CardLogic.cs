@@ -140,9 +140,13 @@ namespace Agile.Logic
                     }
                 }.Register();
 
-                new Graph<CardEntity>.ConstructFrom<ListEntity>(CardOperation.CreateCardFromBoard)
+                new Graph<CardEntity>.ConstructFrom<ListEntity>(CardOperation.CreateCardFromList)
                 {
-                    Construct = (l, args) => new CardEntity { List = l.ToLite(), Title = args.TryGetArgC<string>()}
+                    Construct = (l, args) => new CardEntity 
+                    { 
+                        List = l.ToLite(), 
+                        Title = args.TryGetArgC<string>(), 
+                    }
                 }.Register();
             }
         }
