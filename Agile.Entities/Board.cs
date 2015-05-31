@@ -21,11 +21,11 @@ namespace Agile.Entities
             set { SetToStr(ref name, value); }
         }
 
-        bool archived;
-        public bool Archived
+        ArchivedState state;
+        public ArchivedState State
         {
-            get { return archived; }
-            set { Set(ref archived, value); }
+            get { return state; }
+            set { Set(ref state, value); }
         }
 
         [NotNullable]
@@ -35,6 +35,15 @@ namespace Agile.Entities
         {
             get { return project; }
             set { Set(ref project, value); }
+        }
+
+        [NotNullable, PreserveOrder]
+        MList<Lite<ListEntity>> lists = new MList<Lite<ListEntity>>();
+        [NotNullValidator, NoRepeatValidator]
+        public MList<Lite<ListEntity>> Lists
+        {
+            get { return lists; }
+            set { Set(ref lists, value); }
         }
 
         static Expression<Func<BoardEntity, string>> ToStringExpression = e => e.name;
@@ -48,6 +57,7 @@ namespace Agile.Entities
     {
         public static readonly ExecuteSymbol<BoardEntity> Save = OperationSymbol.Execute<BoardEntity>();
         public static readonly ExecuteSymbol<BoardEntity> Archive = OperationSymbol.Execute<BoardEntity>();
+        public static readonly ExecuteSymbol<BoardEntity> Unarchive = OperationSymbol.Execute<BoardEntity>();
         public static readonly ConstructSymbol<BoardEntity>.From<ProjectEntity> CreateBoardFromProject = OperationSymbol.Construct<BoardEntity>.From<ProjectEntity>();
     }
 }

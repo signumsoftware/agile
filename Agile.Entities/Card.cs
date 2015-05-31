@@ -15,13 +15,20 @@ namespace Agile.Entities
     [Serializable, EntityKind(EntityKind.Main, EntityData.Transactional)]
     public class CardEntity : Entity, ISubscriptionTarget, INotificationTarget 
     {
-        [NotNullable]
         Lite<ListEntity> list;
-        [NotNullValidator]
         public Lite<ListEntity> List
         {
             get { return list; }
             set { Set(ref list, value); }
+        }
+
+        [NotNullable]
+        Lite<ProjectEntity> project;
+        [NotNullValidator]
+        public Lite<ProjectEntity> Project
+        {
+            get { return project; }
+            set { Set(ref project, value); }
         }
 
         [NotNullable, SqlDbType(Size = 100)]
@@ -42,11 +49,11 @@ namespace Agile.Entities
             set { Set(ref description, value); }
         }
 
-        bool archived;
-        public bool Archived
+        ArchivedState state;
+        public ArchivedState State
         {
-            get { return archived; }
-            set { Set(ref archived, value); }
+            get { return state; }
+            set { Set(ref state, value); }
         }
 
         decimal order;
@@ -70,12 +77,34 @@ namespace Agile.Entities
         {
             return ToStringExpression.Evaluate(this);
         }
+
+        protected override string PropertyValidation(System.Reflection.PropertyInfo pi)
+        {
+            if (pi.Is(() => List))
+            {
+                if (List == null && State == ArchivedState.Alive)
+                    return ValidationMessage._0IsNotSet.NiceToString(pi.NiceName());
+                if (List != null && state == ArchivedState.Archived)
+                    return ValidationMessage._0IsSet.NiceToString(pi.NiceName());
+            }
+
+            return base.PropertyValidation(pi);
+        }
+    }
+
+
+    public enum ArchivedState
+    {
+        Alive,
+        Archived,
     }
 
     public static class CardOperation
     {
         public static readonly ExecuteSymbol<CardEntity> Save = OperationSymbol.Execute<CardEntity>();
         public static readonly ExecuteSymbol<CardEntity> Archive = OperationSymbol.Execute<CardEntity>();
+        public static readonly ExecuteSymbol<CardEntity> Unarchive = OperationSymbol.Execute<CardEntity>();
+        public static readonly DeleteSymbol<CardEntity> Delete = OperationSymbol.Delete<CardEntity>();
         public static readonly ExecuteSymbol<CardEntity> Move = OperationSymbol.Execute<CardEntity>();
         public static readonly ConstructSymbol<CardEntity>.From<ListEntity> CreateCardFromList = OperationSymbol.Construct<CardEntity>.From<ListEntity>();
     }
@@ -103,7 +132,9 @@ namespace Agile.Entities
             private set { Set(ref creationDate, value); }
         }
 
+        [NotNullable]
         Lite<UserEntity> user;
+        [NotNullValidator]
         public Lite<UserEntity> User
         {
             get { return user; }
@@ -119,36 +150,46 @@ namespace Agile.Entities
             set { Set(ref card, value); }
         }
 
-        [NotNullable]
         Lite<ListEntity> from;
-        [NotNullValidator]
         public Lite<ListEntity> From
         {
             get { return from; }
             set { Set(ref from, value); }
         }
 
-        decimal fromOrder;
-        public decimal FromOrder
+        int? fromPosition;
+        public int? FromPosition
         {
-            get { return fromOrder; }
-            set { Set(ref fromOrder, value); }
+            get { return fromPosition; }
+            set { Set(ref fromPosition, value); }
         }
 
-        [NotNullable]
+        ArchivedState fromState;
+        public ArchivedState FromState
+        {
+            get { return fromState; }
+            set { Set(ref fromState, value); }
+        }
+
         Lite<ListEntity> to;
-        [NotNullValidator]
         public Lite<ListEntity> To
         {
             get { return to; }
             set { Set(ref to, value); }
         }
 
-        decimal toOrder;
-        public decimal ToOrder
+        int? toPosition;
+        public int? ToPosition
         {
-            get { return toOrder; }
-            set { Set(ref toOrder, value); }
+            get { return toPosition; }
+            set { Set(ref toPosition, value); }
+        }
+
+        ArchivedState toState;
+        public ArchivedState ToState
+        {
+            get { return toState; }
+            set { Set(ref toState, value); }
         }
     }
 

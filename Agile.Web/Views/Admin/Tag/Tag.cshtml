@@ -2,7 +2,7 @@
 
 @using (var tc = Html.TypeContext<TagEntity>())
 {
-    @Html.EntityLine(tc, t => t.Board)
+    @Html.EntityLine(tc, t => t.Project)
     @Html.ValueLine(tc, t => t.Name)
     @Html.ValueLine(tc, t => t.Color)
 }

@@ -4,6 +4,7 @@ using Agile.Web.Board;
 using Signum.Engine;
 using Signum.Engine.Operations;
 using Signum.Entities;
+using Signum.Entities.Reflection;
 using Signum.Utilities;
 using Signum.Web;
 using System;
@@ -30,7 +31,12 @@ namespace Agile.Web.Controllers
 
             list.ConstructFrom(CardOperation.CreateCardFromList, text).Execute(CardOperation.Save);
 
-            var info = list.Board.InDB(b => b.ToBoardInfo());
+            return PartialBoard();
+        }
+
+        ActionResult PartialBoard()
+        {
+            var info = this.ParseLite<BoardEntity>("board").InDB(b => b.ToBoardInfo());
 
             return PartialView(BoardClient.ViewClientPrefix.FormatWith("BoardPartial"), info);
         }
@@ -44,9 +50,29 @@ namespace Agile.Web.Controllers
 
             card.Execute(CardOperation.Move, new CardMoveOptions { List = list, Next = next, Previous = prev  });
 
-            var info = list.InDB(l => l.Board.Entity.ToBoardInfo());
+            return PartialBoard();
+        }
 
-            return PartialView(BoardClient.ViewClientPrefix.FormatWith("BoardPartial"), info);
+        public ActionResult SaveAndRefresh()
+        {
+            var card = this.ExtractEntity<CardEntity>();
+
+            MappingContext context = card.ApplyChanges(this).Validate();
+
+            if (context.HasErrors())
+                return context.ToJsonModelState();
+
+            try
+            {
+                card.Execute(CardOperation.Save);
+            }
+            catch (IntegrityCheckException e)
+            {
+                context.ImportErrors(e.Errors);
+                return context.ToJsonModelState();
+            }
+
+            return PartialBoard();
         }
     }
 }

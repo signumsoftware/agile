@@ -64,7 +64,7 @@ namespace Agile.Logic
             if (sb.NotDefined(MethodInfo.GetCurrentMethod()))
             {
                 sb.Include<CardEntity>();
-                sb.AddUniqueIndex((CardEntity e) => new { e.List, e.Order });
+                sb.AddUniqueIndex((CardEntity e) => new { e.List, e.Order }, a => a.List != null);
 
                 sb.Include<CardTransitionEntity>();
 
@@ -75,8 +75,8 @@ namespace Agile.Logic
                     {
                         Entity = c,
                         c.Id,
-                        Name = c.Title,
-                        c.Archived,
+                        c.Title,
+                        c.State,
                         c.Order,
                         c.List,
                     });
@@ -91,64 +91,139 @@ namespace Agile.Logic
                         c.Card,
                         c.User,
                         c.From,
-                        c.FromOrder,
+                        FromOrder = c.FromPosition,
                         c.To,
-                        c.ToOrder,
+                        ToOrder = c.ToPosition,
                     });
      
      
                 dqm.RegisterExpression((ListEntity l) => l.Cards(), () => typeof(CardEntity).NicePluralName());
 
-                new Graph<CardEntity>.Execute(CardOperation.Save)
-                {
-                    AllowsNew = true,
-                    Lite = false,
-                    Execute = (c, _) =>
-                    {
-                        if (c.IsNew)
-                            c.Order = (c.List.InDB().SelectMany(a => a.Cards()).Max(a => (decimal?)a.Order) ?? -1) + 1;
-                    }
-                }.Register();
-
-                new Graph<CardEntity>.Execute(CardOperation.Archive)
-                {
-                    Execute = (c, _) => { c.Archived = true; }
-                }.Register();
-
-                new Graph<CardEntity>.Execute(CardOperation.Move)
-                {
-                    Execute = (c, args) => 
-                    {
-                        var trans = new CardTransitionEntity
-                        {
-                            Card = c.ToLite(),
-                            User = UserEntity.Current.ToLite(),
-                            From = c.List,
-                            FromOrder = c.Order,
-                        };
-
-                        var ops = args.GetArg<CardMoveOptions>();
-
-                        c.List = ops.List;
-
-                        SetOrder(c, ops);
-
-                        trans.To = c.List;
-                        trans.ToOrder = c.Order;
-
-                        trans.Save();
-                    }
-                }.Register();
-
-                new Graph<CardEntity>.ConstructFrom<ListEntity>(CardOperation.CreateCardFromList)
-                {
-                    Construct = (l, args) => new CardEntity 
-                    { 
-                        List = l.ToLite(), 
-                        Title = args.TryGetArgC<string>(), 
-                    }
-                }.Register();
+                CardGraph.Register();
             }
+        }
+
+        
+    }
+
+    public class CardGraph: Graph<CardEntity, ArchivedState>
+    {
+        public static void Register()
+        {
+            GetState = a => a.State;
+
+            new Execute(CardOperation.Save)
+            {
+                AllowsNew = true,
+                Lite = false,
+                FromStates = { ArchivedState.Alive },
+                ToStates = { ArchivedState.Alive },
+                Execute = (c, _) =>
+                {
+                    if (c.IsNew)
+                        c.Order = (c.List.InDB().SelectMany(a => a.Cards()).Max(a => (decimal?)a.Order) ?? -1) + 1;
+                }
+            }.Register();
+
+            
+            new Execute(CardOperation.Archive)
+            {
+                FromStates = { ArchivedState.Alive },
+                ToStates = { ArchivedState.Archived },
+                Execute = (c, _) => 
+                {
+                    new CardTransitionEntity
+                    {
+                        Card = c.ToLite(),
+                        User = UserEntity.Current.ToLite(),
+                        From = c.List,
+                        FromPosition = Position(c),
+                        FromState = ArchivedState.Alive,
+                        To = null,
+                        ToPosition = null,
+                        ToState = ArchivedState.Archived,
+                    }.Save();
+
+                    c.State = ArchivedState.Archived;
+                    c.List = null;
+                }
+            }.Register();
+
+            new Execute(CardOperation.Unarchive)
+            {
+                FromStates = { ArchivedState.Archived },
+                ToStates = { ArchivedState.Alive },
+                Execute = (c, args) =>
+                {
+                    c.State = ArchivedState.Alive;
+                    c.List = args.GetArg<Lite<ListEntity>>();
+                    c.Order = (c.List.InDB().SelectMany(a => a.Cards()).Max(a => (decimal?)a.Order) ?? -1) + 1;
+
+                    new CardTransitionEntity
+                    {
+                        Card = c.ToLite(),
+                        User = UserEntity.Current.ToLite(),
+                        From = null,
+                        FromPosition = null,
+                        FromState = ArchivedState.Archived,
+                        To = c.List,
+                        ToPosition = Position(c),
+                        ToState = ArchivedState.Alive,
+                    }.Save();
+                }
+            }.Register();
+
+            new Graph<CardEntity, ArchivedState>.Delete(CardOperation.Delete)
+            {
+                FromStates = { ArchivedState.Archived },
+                Delete = (c, _) => { c.Delete(); }
+            }.Register();
+
+            Schema.Current.EntityEvents<CardEntity>().PreUnsafeDelete += query => query.SelectMany(q => q.CardTransitions()).UnsafeDelete();
+
+            new Execute(CardOperation.Move)
+            {
+                FromStates = { ArchivedState.Alive },
+                ToStates = { ArchivedState.Alive },
+                Execute = (c, args) =>
+                {
+                    var trans = new CardTransitionEntity
+                    {
+                        Card = c.ToLite(),
+                        User = UserEntity.Current.ToLite(),
+                        From = c.List,
+                        FromPosition = Position(c),
+                    };
+
+                    var ops = args.GetArg<CardMoveOptions>();
+
+                    c.List = ops.List;
+
+                    SetOrder(c, ops);
+
+                    trans.To = c.List;
+                    trans.ToPosition = Position(c);
+
+                    trans.Save();
+                }
+            }.Register();
+
+            new ConstructFrom<ListEntity>(CardOperation.CreateCardFromList)
+            {
+                ToStates = { ArchivedState.Alive },
+                Construct = (l, args) => new CardEntity
+                {
+                    List = l.ToLite(),
+                    Project = l.Project,
+                    Title = args.TryGetArgC<string>(),
+                }
+            }.Register();
+
+        }
+
+        private static int Position(CardEntity c)
+        {
+            return c.List.InDB(l => l.Cards().Count(a => a.Order < c.Order));
         }
 
         private static void SetOrder(CardEntity c, CardMoveOptions ops)
@@ -165,7 +240,7 @@ namespace Agile.Logic
 
                 ops.List.InDB()
                     .SelectMany(l => l.Cards())
-                    .Where(a => a.Order >= c.Order && a != c)
+                    .Where(a => a.Order >= c.Order) // && a != c
                     .UnsafeUpdate()
                     .Set(a => a.Order, a => a.Order + 1)
                     .Execute();

@@ -17,13 +17,6 @@ namespace Agile.Logic
 {
     public static class BoardLogic
     {
-        static Expression<Func<BoardEntity, IQueryable<ListEntity>>> ListsExpression = 
-            b => Database.Query<ListEntity>().Where(l => l.Board.RefersTo(b));
-        public static IQueryable<ListEntity> Lists(this BoardEntity e)
-        {
-            return ListsExpression.Evaluate(e);
-        }
-
         static Expression<Func<ListEntity, ListInfo>> ToListInfoExpression =
             list => new ListInfo
             {
@@ -37,13 +30,14 @@ namespace Agile.Logic
             return ToListInfoExpression.Evaluate(list);
         }
 
-        static Expression<Func<BoardEntity, BoardInfo>> ToBoardInfoExpression = 
+        static Expression<Func<BoardEntity, BoardInfo>> ToBoardInfoExpression =
             board => new BoardInfo
             {
-                 Lite = board.ToLite(),
-                 Name = board.Name,
-                 Subscription = board.SubscriptionMethod(),
-                 List = board.Lists().OrderBy(a => a.Order).Select(c => c.ToListInfo()).ToList(),
+                Lite = board.ToLite(),
+                Projects = board.Project,
+                Name = board.Name,
+                Subscription = board.SubscriptionMethod(),
+                Lists = board.MListElements(b => b.Lists).OrderBy(a => a.Order).Select(c => c.Element.Entity.ToListInfo()).ToList(),
             };
         public static BoardInfo ToBoardInfo(this BoardEntity board)
         {
@@ -56,7 +50,6 @@ namespace Agile.Logic
             {
                 sb.Include<BoardEntity>();
                 sb.Include<ListEntity>();
-                sb.AddUniqueIndex((ListEntity e) => new { e.Board, e.Order });
         
                 dqm.RegisterQuery(typeof(BoardEntity), () =>
                     from b in Database.Query<BoardEntity>()
@@ -65,7 +58,7 @@ namespace Agile.Logic
                         Entity = b,
                         b.Id,
                         b.Name,
-                        b.Archived,
+                        b.State,
                         b.Project,
                     });
         
@@ -76,40 +69,17 @@ namespace Agile.Logic
                         Entity = l,
                         l.Id,
                         l.Name,
-                        l.Archived,
-                        l.Order,
-                        l.Board,
+                        l.Project,
                     });
-        
-                dqm.RegisterExpression((BoardEntity b) => b.Lists(), () => typeof(ListEntity).NicePluralName());
 
-                new Graph<BoardEntity>.ConstructFrom<ProjectEntity>(BoardOperation.CreateBoardFromProject)
+             
+
+
+                new Graph<ListEntity>.ConstructFrom<ProjectEntity>(ListOperation.CreateListFromProject)
                 {
-                    Construct = (p, args) => new BoardEntity
+                    Construct = (p, args) => new ListEntity
                     {
                         Project = p.ToLite(),
-                        Name = args.TryGetArgC<string>()
-                    }
-                }.Register();
-
-                new Graph<BoardEntity>.Execute(BoardOperation.Save)
-                {
-                    AllowsNew = true,
-                    Lite = false,
-                    Execute = (b, _) => { }
-                }.Register();
-
-                new Graph<BoardEntity>.Execute(BoardOperation.Archive)
-                {
-                    Execute = (b, _) => { b.Archived = true; }
-                }.Register();
-
-
-                new Graph<ListEntity>.ConstructFrom<BoardEntity>(ListOperation.CreateListFromBoard)
-                {
-                    Construct = (b, args) => new ListEntity
-                    {
-                        Board = b.ToLite(),
                         Name = args.TryGetArgC<string>()
                     }
                 }.Register();
@@ -120,49 +90,55 @@ namespace Agile.Logic
                     Lite = false,
                     Execute = (l, _) =>
                     {
-                        if (l.IsNew)
-                            l.Order = (l.Board.InDB().SelectMany(a => a.Lists()).Max(a => (decimal?)a.Order) ?? -1) + 1;
                     }
                 }.Register();
 
-                new Graph<ListEntity>.Execute(ListOperation.Move)
-                {
-                    Execute = (list, args) =>
-                    {
-                        var ops = args.GetArg<ListMoveOptions>();
-
-                        list.Board = ops.Board;
-
-                        SetOrder(list, ops);
-                    }
-                }.Register();
-
-                new Graph<ListEntity>.Execute(ListOperation.Archive)
-                {
-                    Execute = (b, _) => { b.Archived = true; }
-                }.Register();
+                BoardGraph.Register();
             }
         }
+    }
 
-        private static void SetOrder(ListEntity li, ListMoveOptions ops)
+    public class BoardGraph : Graph<BoardEntity, ArchivedState>
+    {
+        public static void Register()
         {
-            if (ops.Previous == null && ops.Next == null)
-                li.Order = 0;
-            else if (ops.Previous == null)
-                li.Order = ops.Next.InDB(a => a.Order) - 1;
-            else if (ops.Next == null)
-                li.Order = ops.Previous.InDB(a => a.Order) + 1;
-            else
+            new ConstructFrom<ProjectEntity>(BoardOperation.CreateBoardFromProject)
             {
-                li.Order = ops.Next.InDB(a => a.Order);
+                ToStates = { ArchivedState.Alive }, 
+                Construct = (p, args) => new BoardEntity
+                {
+                    Project = p.ToLite(),
+                    Name = args.TryGetArgC<string>()
+                }
+            }.Register();
 
-                ops.Board.InDB()
-                    .SelectMany(l => l.Lists())
-                    .Where(a => a.Order >= li.Order && a != li)
-                    .UnsafeUpdate()
-                    .Set(a => a.Order, a => a.Order + 1)
-                    .Execute();
-            }
+            new Graph<BoardEntity>.Execute(BoardOperation.Save)
+            {
+                AllowsNew = true,
+                Lite = false,
+                Execute = (b, _) => { }
+            }.Register();
+
+            new Execute(BoardOperation.Archive)
+            {
+                FromStates = { ArchivedState.Alive },
+                ToStates = { ArchivedState.Archived },
+                Execute = (c, _) =>
+                {
+                    c.State = ArchivedState.Archived;
+                  
+                }
+            }.Register();
+
+            new Execute(BoardOperation.Unarchive)
+            {
+                FromStates = { ArchivedState.Archived },
+                ToStates = { ArchivedState.Alive },
+                Execute = (c, args) =>
+                {
+                    c.State = ArchivedState.Alive;
+                }
+            }.Register();
         }
     }
 
@@ -177,8 +153,9 @@ namespace Agile.Logic
     public class BoardInfo
     {
         public Lite<BoardEntity> Lite;
+        public Lite<ProjectEntity> Projects;
         public string Name;
         public SubscriptionMethod? Subscription;
-        public List<ListInfo> List;
+        public List<ListInfo> Lists;
     }
 }

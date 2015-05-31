@@ -145,10 +145,10 @@ namespace Agile.Logic
         {
             TypeConditionLogic.Register(AgileGroup.MyProjects, (ProjectEntity p) => p.Members.Contains(UserEntity.Current.ToLite()));
             TypeConditionLogic.Register(AgileGroup.MyProjects, (BoardEntity b) => b.Project.Entity.InCondition(AgileGroup.MyProjects));
-            TypeConditionLogic.Register(AgileGroup.MyProjects, (ListEntity l) => l.Board.Entity.InCondition(AgileGroup.MyProjects));
-            TypeConditionLogic.Register(AgileGroup.MyProjects, (CardEntity c) => c.List.Entity.InCondition(AgileGroup.MyProjects));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (ListEntity l) => l.Project.Entity.InCondition(AgileGroup.MyProjects));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (CardEntity c) => c.Project.Entity.InCondition(AgileGroup.MyProjects));
             TypeConditionLogic.Register(AgileGroup.MyProjects, (CommentEntity c) => c.Card.Entity.InCondition(AgileGroup.MyProjects));
-            TypeConditionLogic.Register(AgileGroup.MyProjects, (TagEntity t) => t.Board.Entity.InCondition(AgileGroup.MyProjects));
+            TypeConditionLogic.Register(AgileGroup.MyProjects, (TagEntity t) => t.Project.Entity.InCondition(AgileGroup.MyProjects));
 
             TypeConditionLogic.Register(AgileGroup.UserEntities, (NotificationEntity t) => t.User == UserEntity.Current.ToLite());
             TypeConditionLogic.Register(AgileGroup.UserEntities, (SubscriptionEntity t) => t.User == UserEntity.Current.ToLite());

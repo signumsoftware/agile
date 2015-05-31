@@ -79,6 +79,8 @@ namespace Agile.Logic
                         return new PrefixPair(first.PhysicalPrefix) { WebPrefix = first.WebPrefix };
                     }
                 });
+
+                Schema.Current.EntityEvents<CardEntity>().PreUnsafeDelete += query => query.SelectMany(q => q.Attachments()).UnsafeDelete();
         
             }
         }

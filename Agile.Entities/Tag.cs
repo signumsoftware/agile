@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Agile.Entities
 {
-    [Serializable, EntityKind(EntityKind.String, EntityData.Master)]
+    [Serializable, EntityKind(EntityKind.Shared, EntityData.Master)]
     public class TagEntity : Entity
     {
         [NotNullable, SqlDbType(Size = 100), UniqueIndex]
@@ -32,12 +32,12 @@ namespace Agile.Entities
         }
 
         [NotNullable]
-        Lite<BoardEntity> board;
+        Lite<ProjectEntity> project;
         [NotNullValidator]
-        public Lite<BoardEntity> Board
+        public Lite<ProjectEntity> Project
         {
-            get { return board; }
-            set { Set(ref board, value); }
+            get { return project; }
+            set { Set(ref project, value); }
         }
 
         static Expression<Func<TagEntity, string>> ToStringExpression = e => e.name;
@@ -50,6 +50,6 @@ namespace Agile.Entities
     public static class TagOperation
     {
         public static readonly ExecuteSymbol<TagEntity> Save = OperationSymbol.Execute<TagEntity>();
-        public static readonly ConstructSymbol<TagEntity>.From<BoardEntity> CreteTagFromBoard = OperationSymbol.Construct<TagEntity>.From<BoardEntity>();
+        public static readonly ConstructSymbol<TagEntity>.From<ProjectEntity> CreteTagFromProject = OperationSymbol.Construct<TagEntity>.From<ProjectEntity>();
     }
 }

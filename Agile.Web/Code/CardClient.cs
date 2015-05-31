@@ -11,6 +11,7 @@ using Signum.Engine.Operations;
 using Signum.Web;
 using Signum.Web.Operations;
 using Agile.Entities;
+using Agile.Web.Controllers;
 
 namespace Agile.Web.Card
 {
@@ -33,7 +34,19 @@ namespace Agile.Web.Card
         
                 OperationClient.AddSettings(new List<OperationSettings> 
                 {
-                    //new EntityOperationSettings<T>(operation){ ... }
+                    new EntityOperationSettings<CardEntity>(CardOperation.Archive){  Style = BootstrapStyle.Warning, HideOnCanExecute = true },
+                    new EntityOperationSettings<CardEntity>(CardOperation.Unarchive){  
+                        Style = BootstrapStyle.Success, 
+                        HideOnCanExecute = true ,
+                       Click = ctx => CardModule["unarchive"](ctx.Options(), 
+                             new FindOptions(typeof(ListEntity), "Project", ctx.Entity.Project) { SearchOnLoad = true }.ToJS(ctx.Prefix, "list"), 
+                              ctx.Url.Action((CardController c)=>c.Unarchive()), 
+                             JsFunction.Event)
+                    },
+                    new EntityOperationSettings<CardEntity>(CardOperation.Delete){ HideOnCanExecute = true },
+                    new EntityOperationSettings<CardEntity>(CardOperation.Move){ IsVisible = a => false },
+                    new EntityOperationSettings<CardEntity>(CommentOperation.CreateCommentFromCard){ IsVisible = a => false },
+                    new EntityOperationSettings<CardEntity>(AttachmentOperation.CreateAttachmentFromCard){ IsVisible = a => false },
                 });
             }
         }

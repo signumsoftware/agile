@@ -44,16 +44,23 @@ namespace Agile.Test.Environment
                 using(AuthLogic.UnsafeUserSession("Super"))
                 {
                     var p = new ProjectEntity { Name = "Change the World" }.Execute(ProjectOperation.Save);
-                    var b = new BoardEntity { Name = "Importan Issues", Project = p.ToLite()  }.Execute(BoardOperation.Save);
-                    var wontFix = b.ConstructFrom(TagOperation.CreteTagFromBoard, "Won't fix", ColorEntity.FromRGBHex("#ff0000")).Execute(TagOperation.Save);
 
-                    var todo = b.ConstructFrom(ListOperation.CreateListFromBoard, "ToDo").Execute(ListOperation.Save);
+                    var wontFix = p.ConstructFrom(TagOperation.CreteTagFromProject, "Won't fix", ColorEntity.FromRGBHex("#ff0000")).Execute(TagOperation.Save);
+
+                    var todo = p.ConstructFrom(ListOperation.CreateListFromProject, "ToDo").Execute(ListOperation.Save);
+                    var inProgress = p.ConstructFrom(ListOperation.CreateListFromProject, "In Progress").Execute(ListOperation.Save);
+                    var done = p.ConstructFrom(ListOperation.CreateListFromProject, "Done").Execute(ListOperation.Save);
+
+                    var b = new BoardEntity
+                    {
+                        Name = "Importan Issues",
+                        Project = p.ToLite(),
+                        Lists = { todo.ToLite(), inProgress.ToLite(), done.ToLite() }
+                    }.Execute(BoardOperation.Save);
+
                     todo.ConstructFrom(CardOperation.CreateCardFromList, "Global Warming").Do(c=>c.Tags.Add(wontFix)).Execute(CardOperation.Save);
-
-                    var inProgress = b.ConstructFrom(ListOperation.CreateListFromBoard, "In Progress").Execute(ListOperation.Save);
+                   
                     inProgress.ConstructFrom(CardOperation.CreateCardFromList, "Electric Car").Execute(CardOperation.Save);
-
-                    var done = b.ConstructFrom(ListOperation.CreateListFromBoard, "Done").Execute(ListOperation.Save);
                     done.ConstructFrom(CardOperation.CreateCardFromList, "Internet").Execute(CardOperation.Save);
                 }
 

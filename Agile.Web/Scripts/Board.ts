@@ -4,6 +4,7 @@ import Entities = require("Framework/Signum.Web/Signum/Scripts/Entities")
 import Navigator = require("Framework/Signum.Web/Signum/Scripts/Navigator")
 import Finder = require("Framework/Signum.Web/Signum/Scripts/Finder")
 import Lines = require("Framework/Signum.Web/Signum/Scripts/Lines")
+import Validator = require("Framework/Signum.Web/Signum/Scripts/Validator")
 import Operations = require("Framework/Signum.Web/Signum/Scripts/Operations")
 
 export function init() {
@@ -40,11 +41,13 @@ export function initList(urlCreate: string) {
 
         var text = textArea.val();
 
+        var board = $("div.board").attr("data-board");
+
         SF.ajaxPost({
             url: urlCreate,
-            data: { list: list, text: text }
-        }).then(html=> {
-            textArea.closest(".board").replaceWith($(html));
+            data: { list: list, text: text, board: board }
+        }).then(bHtml=> {
+            textArea.closest(".board").replaceWith($(bHtml));
 
             editMode($(".list[data-list='" + list + "'] a.list-add-card"));
         }); 
@@ -61,7 +64,7 @@ export function initList(urlCreate: string) {
     });
 }
 
-export function initCard() {
+export function initCard(saveUrl : string) {
     var board = $("div.board");
 
     board.on("click", "div.card", e=> {
@@ -70,7 +73,18 @@ export function initCard() {
 
         var eHtml = new Entities.EntityHtml("Card", Entities.RuntimeInfo.fromKey(liteKey));
 
-        Navigator.viewPopup(eHtml); 
+        Navigator.viewPopup(eHtml, { saveProtected: false }).then(html=> {
+            if (html) {
+                var formData = Validator.getFormValuesHtml(html, "prefix");
+
+                formData["board"] = board.attr("data-board");
+
+                return SF.ajaxPost({ url: saveUrl, data: formData })
+                    .then(bHtml=> {
+                        board.replaceWith($(bHtml));
+                });
+            }
+        });; 
     }); 
 }
 
@@ -126,9 +140,9 @@ export function initDrag(urlMove: string) {
 
         SF.ajaxPost({
             url: urlMove,
-            data: { list: list, card: card, next: next, prev: prev }
-        }).then(html=> {
-            sep.closest(".board").replaceWith($(html));
+            data: { list: list, card: card, next: next, prev: prev, board : board.attr("data-board") }
+        }).then(bHtml=> {
+            sep.closest(".board").replaceWith($(bHtml));
         });
     }); 
 }

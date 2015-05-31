@@ -12,6 +12,7 @@ using Signum.Engine.Operations;
 using Signum.Engine.Maps;
 using Signum.Engine.DynamicQuery;
 using Agile.Entities;
+using Signum.Entities.Authorization;
 
 namespace Agile.Logic
 {
@@ -30,9 +31,13 @@ namespace Agile.Logic
                         Entity = p,
                         p.Id,
                         p.Name,
-                        Removed = p.Archived,
                     });
-        
+
+                new Graph<ProjectEntity>.Construct(ProjectOperation.Create)
+                {
+                    Construct = (_) => new ProjectEntity { Members = { UserEntity.Current.ToLite() } }
+                }.Register();
+
                 new Graph<ProjectEntity>.Execute(ProjectOperation.Save)
                 {
                     AllowsNew = true,

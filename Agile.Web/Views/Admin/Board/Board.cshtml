@@ -3,19 +3,7 @@
 @using (var bc = Html.TypeContext<BoardEntity>())
 {
     @Html.ValueLine(bc, b => b.Name)
-    @Html.ValueLine(bc, b => b.Archived)
+    @Html.ValueLine(bc, b => b.State)
     @Html.EntityLine(bc, b => b.Project)
-
-    if (!bc.Value.IsNew)
-    {
-        <fieldset>
-            <legend>@typeof(TagEntity).NicePluralName()</legend>
-            @Html.SearchControl(new FindOptions(typeof(TagEntity), "Board", bc.Value).RemovePagination(), new Context(bc, "tag"))
-        </fieldset>
-
-        <fieldset>
-            <legend>@typeof(ListEntity).NicePluralName()</legend>
-            @Html.SearchControl(new FindOptions(typeof(ListEntity), "Board", bc.Value).RemovePagination(), new Context(bc, "list"))
-        </fieldset>
-    }
+    @Html.EntityList(bc, b => b.Lists)
 }

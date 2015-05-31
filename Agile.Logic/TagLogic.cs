@@ -18,9 +18,9 @@ namespace Agile.Logic
 {
     public static class TagLogic
     {
-        static Expression<Func<BoardEntity, IQueryable<TagEntity>>> TagsExpression = 
-            b => Database.Query<TagEntity>().Where(t => t.Board.RefersTo(b));
-        public static IQueryable<TagEntity> Tags(this BoardEntity e)
+        static Expression<Func<ProjectEntity, IQueryable<TagEntity>>> TagsExpression = 
+            b => Database.Query<TagEntity>().Where(t => t.Project.RefersTo(b));
+        public static IQueryable<TagEntity> Tags(this ProjectEntity e)
         {
             return TagsExpression.Evaluate(e);
         }
@@ -38,10 +38,10 @@ namespace Agile.Logic
                         Entity = t,
                         t.Id,
                         t.Name,
-                        t.Board,
+                        t.Project,
                     });
-        
-                dqm.RegisterExpression((BoardEntity b) => b.Tags(), () => typeof(TagEntity).NicePluralName());
+
+                dqm.RegisterExpression((ProjectEntity b) => b.Tags(), () => typeof(TagEntity).NicePluralName());
         
                 new Graph<TagEntity>.Execute(TagOperation.Save)
                 {
@@ -50,11 +50,11 @@ namespace Agile.Logic
                     Execute = (t, _) => { }
                 }.Register();
 
-                new Graph<TagEntity>.ConstructFrom<BoardEntity>(TagOperation.CreteTagFromBoard)
+                new Graph<TagEntity>.ConstructFrom<ProjectEntity>(TagOperation.CreteTagFromProject)
                 {
                     Construct = (b, args) => new TagEntity 
                     { 
-                        Board = b.ToLite(),
+                        Project = b.ToLite(),
                         Name = args.TryGetArgC<string>(),
                         Color = args.TryGetArgC<ColorEntity>(),
                     }

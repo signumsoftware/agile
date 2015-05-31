@@ -24,9 +24,9 @@
 
                 sc.LabelColumns = new BsColumn(5);
                 @Html.EntityLine(sc, c => c.List, vl => { vl.ReadOnly = true; })
-                if (sc.Value.Archived)
+                if (sc.Value.State == ArchivedState.Archived)
                 {
-                    @Html.ValueLine(sc, c => c.Archived, vl => vl.ReadOnly = true)
+                    @Html.ValueLine(sc, c => c.State, vl => vl.ReadOnly = true)
                 }
                 @Html.ValueLine(sc, c => c.Order)
                 @Html.EntityListCheckbox(sc, c => c.Tags, elb => elb.CustomizeLabel = (tag, lite) =>

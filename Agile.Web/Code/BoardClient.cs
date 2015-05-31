@@ -32,7 +32,8 @@ namespace Agile.Web.Board
         
                 OperationClient.AddSettings(new List<OperationSettings> 
                 {
-                    //new EntityOperationSettings<T>(operation){ ... }
+                    new EntityOperationSettings<BoardEntity>(BoardOperation.Archive){  Style = BootstrapStyle.Warning, HideOnCanExecute = true },
+                    new EntityOperationSettings<BoardEntity>(BoardOperation.Unarchive){  Style = BootstrapStyle.Success, HideOnCanExecute = true },
                 });
             }
         }

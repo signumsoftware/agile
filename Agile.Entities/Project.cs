@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Agile.Entities
 {
-    [Serializable, EntityKind(EntityKind.String, EntityData.Master)]
+    [Serializable, EntityKind(EntityKind.Main, EntityData.Master)]
     public class ProjectEntity : Entity
     {
         [NotNullable, SqlDbType(Size = 100), UniqueIndex]
@@ -20,13 +20,6 @@ namespace Agile.Entities
         {
             get { return name; }
             set { SetToStr(ref name, value); }
-        }
-
-        bool archived;
-        public bool Archived
-        {
-            get { return archived; }
-            set { Set(ref archived, value); }
         }
 
         [NotNullable]
@@ -47,6 +40,7 @@ namespace Agile.Entities
 
     public static class ProjectOperation
     {
+        public static readonly ConstructSymbol<ProjectEntity>.Simple Create = OperationSymbol.Construct<ProjectEntity>.Simple();
         public static readonly ExecuteSymbol<ProjectEntity> Save = OperationSymbol.Execute<ProjectEntity>();
     }
 }

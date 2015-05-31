@@ -3,9 +3,7 @@
 @using (var lc = Html.TypeContext<ListEntity>())
 {
     @Html.ValueLine(lc, l => l.Name)
-    @Html.ValueLine(lc, l => l.Archived)
-    @Html.ValueLine(lc, l => l.Order)
-    @Html.EntityLine(lc, l => l.Board)
+    @Html.EntityLine(lc, l => l.Project)
 
     if (!lc.Value.IsNew)
     {

@@ -114,6 +114,7 @@
     <Compile Include="Code\NotificationClient.cs" />
     <Compile Include="Code\ProjectClient.cs" />
     <Compile Include="Code\TagClient.cs" />
+    <Compile Include="Controllers\CardController.cs" />
     <Compile Include="Controllers\BoardController.cs" />
     <Compile Include="Controllers\HomeController.cs">
       <SubType>Code</SubType>
@@ -407,6 +408,7 @@
       <SubType>Designer</SubType>
     </Content>
     <TypeScriptCompile Include="Scripts\Board.ts" />
+    <TypeScriptCompile Include="Scripts\Card.ts" />
     <TypeScriptCompile Include="Scripts\Comment.ts" />
     <TypeScriptCompile Include="Scripts\Notification.ts" />
     <TypeScriptCompile Include="Scripts\Project.ts" />

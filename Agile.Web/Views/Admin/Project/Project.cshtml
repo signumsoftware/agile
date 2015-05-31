@@ -3,11 +3,24 @@
 @using (var pc = Html.TypeContext<ProjectEntity>())
 {
     @Html.ValueLine(pc, p => p.Name)
-    @Html.ValueLine(pc, p => p.Archived)
     @Html.EntityStrip(pc, p => p.Members)
-    
-    if(!pc.Value.IsNew)
+
+    if (!pc.Value.IsNew)
     {
-        @Html.SearchControl(new FindOptions(typeof(BoardEntity), "Project", pc.Value).RemovePagination(), new Context(pc, "b"))
+        <fieldset>
+            <legend>@typeof(ListEntity).NicePluralName()</legend>
+            @Html.SearchControl(new FindOptions(typeof(ListEntity), "Project", pc.Value).RemovePagination(), new Context(pc, "list"))
+        </fieldset>
+    
+        <fieldset>
+            <legend>@typeof(BoardEntity).NicePluralName()</legend>
+            @Html.SearchControl(new FindOptions(typeof(BoardEntity), "Project", pc.Value).RemovePagination(), new Context(pc, "b"))
+
+        </fieldset>
+
+        <fieldset>
+            <legend>@typeof(TagEntity).NicePluralName()</legend>
+            @Html.SearchControl(new FindOptions(typeof(TagEntity), "Project", pc.Value).RemovePagination(), new Context(pc, "tag"))
+        </fieldset>
     }
 }

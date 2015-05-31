@@ -99,7 +99,7 @@ namespace Agile.Logic
         {
             var subscriptions = card.Subscriptions().ToList();
             subscriptions.AddRange(card.List.InDB().SelectMany(l => l.Subscriptions()));
-            subscriptions.AddRange(card.List.InDB().SelectMany(l => l.Board.Entity.Subscriptions()));
+            subscriptions.AddRange(Database.Query<BoardEntity>().Where(b => b.Lists.Contains(card.List)).SelectMany(b => b.Subscriptions()));
 
             foreach (var gr in subscriptions.GroupBy(a => a.User))
             {
