@@ -102,6 +102,8 @@ namespace Agile.Logic
     {
         public static void Register()
         {
+            GetState = b => b.State;
+
             new ConstructFrom<ProjectEntity>(BoardOperation.CreateBoardFromProject)
             {
                 ToStates = { ArchivedState.Alive }, 
