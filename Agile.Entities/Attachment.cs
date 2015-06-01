@@ -63,5 +63,6 @@ namespace Agile.Entities
     public static class AttachmentOperation
     {
         public static readonly ExecuteSymbol<AttachmentEntity> Save = OperationSymbol.Execute<AttachmentEntity>();
+        public static readonly DeleteSymbol<AttachmentEntity> Delete = OperationSymbol.Delete<AttachmentEntity>();
     }
 }

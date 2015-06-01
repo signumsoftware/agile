@@ -63,6 +63,11 @@ namespace Agile.Logic
                     Execute = (c, _) => { }
                 }.Register();
 
+                new Graph<CommentEntity>.Delete(CommentOperation.Delete)
+                {
+                    Delete = (c, _) => c.Delete()
+                }.Register();
+
                 Schema.Current.EntityEvents<CardEntity>().PreUnsafeDelete += query => query.SelectMany(q => q.Attachments()).UnsafeDelete();
             }
         }

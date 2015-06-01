@@ -60,6 +60,11 @@ namespace Agile.Logic
                     Execute = (c, _) => { }
                 }.Register();
 
+                new Graph<AttachmentEntity>.Delete(AttachmentOperation.Delete)
+                {
+                    Delete = (c, _) => c.Delete()
+                }.Register();
+
                 FilePathLogic.Register(AttachmentFileType.Attachment, new FileTypeAlgorithm
                 {
                     GetPrefixPair = fp =>

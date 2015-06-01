@@ -58,6 +58,7 @@ namespace Agile.Entities
     public static class CommentOperation
     {
         public static readonly ExecuteSymbol<CommentEntity> Save = OperationSymbol.Execute<CommentEntity>();
+        public static readonly DeleteSymbol<CommentEntity> Delete = OperationSymbol.Delete<CommentEntity>();
     }
 
     public enum HistoryMessage
