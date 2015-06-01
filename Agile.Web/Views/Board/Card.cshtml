@@ -21,7 +21,7 @@
         </ul>
     }
     <span>@Model.Title</span>
-    @if (Model.HasDescription || Model.Comments > 0 || Model.Attachments > 0)
+    @if (Model.HasDescription || Model.Comments > 0 || Model.Attachments > 0 || Model.DueDate.HasValue)
     {
         <ul class="card-icons">
             @if (Model.HasDescription)
@@ -41,6 +41,16 @@
             {
                 <li title="@typeof(AttachmentEntity).NicePluralName()">
                     <span class="glyphicon glyphicon-paperclip"></span><span>&nbsp;@Model.Attachments</span>
+                </li>
+            }
+
+            @if (Model.DueDate.HasValue)
+            {
+                var dateClass = Model.DueDate.Value <= TimeZoneManager.Now.Date ? "label label-danger" :
+                    Model.DueDate.Value <= TimeZoneManager.Now.Date.AddDays(3) ? "label label-warning" : null;
+
+                <li title="@Model.DueDate.Value.ToString("d")" class="@dateClass">
+                    <span class="glyphicon glyphicon-time" gray></span><span>&nbsp;@Model.DueDate.Value.SmartShortDatePattern()</span>
                 </li>
             }
         </ul>

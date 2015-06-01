@@ -28,6 +28,7 @@
                     {
                         @Html.ValueLine(sc, c => c.State, vl => { vl.ReadOnly = true; vl.WriteHiddenOnReadonly = true; })
                     }
+                    @Html.ValueLine(sc, c => c.DueDate)
                     @Html.EntityListCheckbox(sc, c => c.Tags, elb =>
                 {
                     elb.AttachFunction = CardClient.CardModule["attachTags"](elb);

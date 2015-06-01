@@ -63,6 +63,14 @@ namespace Agile.Entities
             set { Set(ref order, value); }
         }
 
+        DateTime? dueDate;
+        [DaysPrecissionValidator]
+        public DateTime? DueDate
+        {
+            get { return dueDate; }
+            set { Set(ref dueDate, value); }
+        }
+
         [NotNullable]
         MList<TagEntity> tags = new MList<TagEntity>();
         [NotNullValidator, NoRepeatValidator]

@@ -20,9 +20,10 @@
         {
             <div class="history-item">
                 <div class="history-item-title">
-                    <span style="color:@(ChartColorLogic.ColorFor(hi.User).TryToHtml() ?? "gray")" class="history-user">@hi.User</span> <span title="@hi.CreationDate.ToString()">@hi.CreationDate.ToAgoString()</span> @hi.ToString()
+                    <span style="color:@(ChartColorLogic.ColorFor(hi.User).TryToHtml() ?? "gray")" class="history-user">@hi.User</span> <span title="@hi.CreationDate.ToString()">@hi.CreationDate.ToAgoString()</span> 
                     @if (hi is CardTransitionInfo)
                     {
+                        @hi.ToString()
                         var cti = (CardTransitionInfo)hi;
 
                         var onlyMove = cti.From.Is(cti.To);
@@ -44,6 +45,10 @@
                         {
                             <span class="history-transition">@cti.To @(onlyMove ? "(" + cti.ToPosition + ")" : null)</span>
                         }
+                    }
+                    else
+                    {
+                        <a href="@Navigator.NavigateRoute(hi.Entity)">@hi.ToString()</a>
                     }
                 </div>
                 @if (hi is CommentInfo)

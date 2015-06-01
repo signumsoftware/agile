@@ -40,6 +40,7 @@ namespace Agile.Logic
             {
                 Lite = c.ToLite(),
                 Title = c.Title,
+                DueDate = c.DueDate,
                 Attachments = c.Attachments().Count(),
                 HasDescription = c.Description.HasText(),
                 Comments = c.Comments().Count(),
@@ -259,12 +260,14 @@ namespace Agile.Logic
     {
         public Lite<CardEntity> Lite;
         public string Title;
+        public DateTime? DueDate;     
         public bool HasDescription;
         public int Comments;
         public int Attachments;
         public FilePathEntity FirstImage;
         public List<TagEntity> Tags;
         public SubscriptionMethod? Subscription;
+
     }
 
     public class CardTransitionInfo : HistoryInfo
