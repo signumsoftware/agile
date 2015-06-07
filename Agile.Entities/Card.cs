@@ -13,13 +13,21 @@ using System.Threading.Tasks;
 namespace Agile.Entities
 {
     [Serializable, EntityKind(EntityKind.Main, EntityData.Transactional)]
-    public class CardEntity : Entity, ISubscriptionTarget, INotificationTarget 
+    public class CardEntity : Entity, ISubscriptionTarget 
     {
-        Lite<ListEntity> list;
-        public Lite<ListEntity> List
+        DateTime creationDate = TimeZoneManager.Now;
+        public DateTime CreationDate
         {
-            get { return list; }
-            set { Set(ref list, value); }
+            get { return creationDate; }
+            private set { Set(ref creationDate, value); }
+        }
+
+        [NotNullable]
+        Lite<UserEntity> createdBy;
+        public Lite<UserEntity> CreatedBy
+        {
+            get { return createdBy; }
+            set { Set(ref createdBy, value); }
         }
 
         [NotNullable]
@@ -47,6 +55,14 @@ namespace Agile.Entities
         {
             get { return description; }
             set { Set(ref description, value); }
+        }
+
+
+        Lite<ListEntity> list;
+        public Lite<ListEntity> List
+        {
+            get { return list; }
+            set { Set(ref list, value); }
         }
 
         ArchivedState state;
@@ -78,6 +94,15 @@ namespace Agile.Entities
         {
             get { return tags; }
             set { Set(ref tags, value); }
+        }
+
+        [NotNullable]
+        MList<Lite<UserEntity>> members = new MList<Lite<UserEntity>>();
+        [NotNullValidator, NoRepeatValidator]
+        public MList<Lite<UserEntity>> Members
+        {
+            get { return members; }
+            set { Set(ref members, value); }
         }
 
         static Expression<Func<CardEntity, string>> ToStringExpression = e => e.title;

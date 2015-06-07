@@ -19,7 +19,7 @@ namespace Agile.Web.Controllers
     {
         public ActionResult View(Lite<BoardEntity> board)
         {
-            var info = board.InDB(b => b.ToBoardInfo());
+            var info = GetBoardInfoConsumingNotifications(board);
 
             return View(BoardClient.ViewClientPrefix.FormatWith("Board"), info);
         }
@@ -36,9 +36,28 @@ namespace Agile.Web.Controllers
 
         public ActionResult PartialBoard()
         {
-            var info = this.ParseLite<BoardEntity>("board").InDB(b => b.ToBoardInfo());
+            var board = this.ParseLite<BoardEntity>("board");
+
+            var info = GetBoardInfoConsumingNotifications(board);
 
             return PartialView(BoardClient.ViewClientPrefix.FormatWith("BoardPartial"), info);
+        }
+
+        private static BoardInfo GetBoardInfoConsumingNotifications(Lite<BoardEntity> board)
+        {
+            var info = board.InDB(b => b.ToBoardInfo());
+
+            if (info.Lists.SelectMany(l => l.Cards).SelectMany(a => a.Notifications).Any(NotificationAttendedIn.Board.Contains))
+            {
+                board.InDB().SelectMany(b => b.Lists)
+                  .SelectMany(l => l.Entity.Cards())
+                  .SelectMany(c => c.MyUnreadNotifications())
+                  .Where(n => NotificationAttendedIn.Board.Contains(n.Type))
+                  .UnsafeUpdate()
+                  .Set(a => a.ReadOn, a => TimeZoneManager.Now)
+                  .Execute();
+            }
+            return info;
         }
 
         public ActionResult MoveBoard()
@@ -72,7 +91,7 @@ namespace Agile.Web.Controllers
                 return context.ToJsonModelState();
             }
 
-            return PartialBoard();
+            return null;
         }
     }
 }

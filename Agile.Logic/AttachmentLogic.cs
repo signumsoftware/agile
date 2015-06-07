@@ -52,12 +52,20 @@ namespace Agile.Logic
                     });
         
                 dqm.RegisterExpression((CardEntity c) => c.Attachments(), () => typeof(AttachmentEntity).NicePluralName());
-        
+
                 new Graph<AttachmentEntity>.Execute(AttachmentOperation.Save)
                 {
                     AllowsNew = true,
                     Lite = false,
-                    Execute = (c, _) => { }
+                    Execute = (a, _) =>
+                    {
+                        if (a.IsNew)
+                        {
+                            NotificationLogic.Notify(a.Card.Retrieve(), NotificationType.Attached,
+                                () => NotificationMessage.AttachedA01.NiceToString(a.Type.NiceToString(), a.File.FileName),
+                                overrideCreationDate: a.CreationDate);
+                        }
+                    }
                 }.Register();
 
                 new Graph<AttachmentEntity>.Delete(AttachmentOperation.Delete)
@@ -92,6 +100,11 @@ namespace Agile.Logic
         public override string ToString()
         {
             return HistoryMessage.attached.NiceToString();
+        }
+
+        public override NotificationType NotificationType
+        {
+            get { return Entities.NotificationType.Attached; }
         }
     }
 }

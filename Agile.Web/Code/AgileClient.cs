@@ -23,6 +23,7 @@ using Signum.Web.Operations;
 using Agile.Web.Controllers;
 using Signum.Engine.Operations;
 using System.Web.Mvc.Html;
+using Signum.Engine.Chart;
 
 namespace Agile.Web
 {
@@ -45,7 +46,22 @@ namespace Agile.Web
                 {
                     Email = new EmailConfigurationEntity()
                 });
+
+                Navigator.EntitySettings<UserEntity>().CreateViewOverrides().AfterLine(u => u.PasswordSetDate, 
+                    (html, tc) => html.ValueLine(tc, u => u.Mixin<NotificationUserMixin>().SendNotificationDigestEvery));
             }
+        }
+
+        static List<string> ColorPalette = ChartColorLogic.Palettes["Category20"].Split(' ').ToList();
+
+        public static string HexColor(Lite<UserEntity> user)
+        {
+            return ChartColorLogic.ColorFor(user).TryToHtml() ?? ColorPalette[user.Id.GetHashCode().Mod(ColorPalette.Count)]; 
+        }
+
+        public static string Initials(Lite<UserEntity> u)
+        {
+            return new string(u.ToString().SplitNoEmpty(' ').Take(2).Select(a => char.ToUpper(a[0])).ToArray());
         }
     }
 }

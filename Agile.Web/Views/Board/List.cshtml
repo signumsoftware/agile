@@ -3,7 +3,10 @@
 @model ListInfo
 
 <div class="list" data-list="@Model.Lite.Key()">
-    <h4><a href="@Navigator.NavigateRoute(Model.Lite)">@Model.Name</a></h4>
+    <h4> <a href="@Navigator.NavigateRoute(Model.Lite)">@Model.Name</a>@if (Model.HasSubscription)
+    {
+        <span class="glyphicon glyphicon-eye-open card-icons pull-right" title="@typeof(Agile.Entities.SubscriptionEntity).NiceName()"></span>
+    }</h4>
     <div class="list-cards">
         <div class="card-separator" ></div>
         @foreach (var c in Model.Cards)

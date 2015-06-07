@@ -7,28 +7,41 @@
 
 @using (var cc = Html.TypeContext<CardEntity>())
 {
+    var notifications = cc.Value.MyUnreadNotifications().Where(a => NotificationAttendedIn.Card.Contains(a.Type)).ToList().OrderBy(a => a.CreationDate).ToList();
+    if (notifications.Any())
+    {
+        cc.Value.MyUnreadNotifications().Where(a => NotificationAttendedIn.Card.Contains(a.Type)).UnsafeUpdate().Set(a => a.ReadOn, a => TimeZoneManager.Now).Execute();
+    }
+    var descriptionNot = notifications.Extract(a => a.Type == NotificationType.Modified);
+
     <div class="drop-target">
         <div class="row">
-            <div class="col-sm-9">
+            <div class="col-sm-8">
                 @Html.ValueLine(cc, c => c.Title)
                 <div class="col-sm-12">
-                    @Html.ValueLine(cc, c => c.Description, vl =>
+                    <div class="@(descriptionNot.Any() ? "notification" : null)" title="@descriptionNot.ToString(a => a.ToString(), "\r\n")">
+                        @Html.ValueLine(cc, c => c.Description, vl =>
        {
            vl.ValueLineType = ValueLineType.TextArea;
            vl.FormGroupStyle = FormGroupStyle.SrOnly;
-           vl.ValueHtmlProps.Add("style", "width:100%;height:120px;");
+           vl.ValueHtmlProps.Add("style", "width:100%;height:165px;");
        })
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4 card-left">
                 @using (var sc = cc.SubContext())
                 {
+                    var stateNot = notifications.Extract(a => a.Type == NotificationType.Archived || a.Type == NotificationType.Unarchived || a.Type == NotificationType.Created);
+                    var dueDateNot = notifications.Extract(a => a.Type == NotificationType.DueDateModified);
+
                     sc.LabelColumns = new BsColumn(5);
-                    if (sc.Value.State == ArchivedState.Archived)
-                    {
+                    <div class="@(stateNot.Any() ? "notification" : null)" title="@stateNot.ToString(a => a.ToString(), "\r\n")">
                         @Html.ValueLine(sc, c => c.State, vl => { vl.ReadOnly = true; vl.WriteHiddenOnReadonly = true; })
-                    }
-                    @Html.ValueLine(sc, c => c.DueDate)
+                    </div>
+                    <div class="@(dueDateNot.Any() ? "notification" : null)" title="@dueDateNot.ToString(a => a.ToString(), "\r\n")">
+                        @Html.ValueLine(sc, c => c.DueDate)
+                    </div>
                     @Html.EntityListCheckbox(sc, c => c.Tags, elb =>
                 {
                     elb.AttachFunction = CardClient.CardModule["attachTags"](elb);
@@ -36,10 +49,16 @@
                     {
                         var color = ((TagEntity)lite.Retrieve()).Color.RGBHex();
 
-                        htmlTag.Attr("style", "padding:5px;border-radius:5px;border:1px solid;border-color:" + color +
+                        htmlTag.Attr("style", "padding:2px 6px;border-radius:5px;border:1px solid;border-color:" + color +
                             (sc.Value.Tags.Any(lite.RefersTo) ? ";background-color:" + color + ";color:white" : null));
                     };
-                });
+                })
+                    <fieldset>
+                        <legend>
+                            @Html.PropertyNiceName(() => sc.Value.Members)
+                        </legend>
+                        @Html.EntityStrip(sc, c => c.Members, vl => { vl.FormGroupStyle = FormGroupStyle.None; })
+                    </fieldset>
                 }
             </div>
         </div>
@@ -64,7 +83,7 @@
 
             <div class="comment row">
                 <div class="col-sm-9">
-                    <span style="color:@(ChartColorLogic.ColorFor(UserEntity.Current).TryToHtml() ?? "gray")" class="history-user">@UserEntity.Current</span>
+                    <span style="color:@Agile.Web.AgileClient.HexColor(UserEntity.Current.ToLite())" class=" history-user">@UserEntity.Current</span>
                     <textarea id="@cc.Compose("CommentText")" style="height: 80px;"></textarea>
                 </div>
                 <div class="col-sm-3">

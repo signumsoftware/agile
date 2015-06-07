@@ -6,11 +6,17 @@
 @model CardEntity
 @{
     List<HistoryInfo>
-    history = new List<HistoryInfo>();
+    history = new List<HistoryInfo> { new CardCreatedInfo { Entity = Model.ToLite(), CreationDate = Model.CreationDate, User = Model.CreatedBy } };
     history.AddRange(Model.Comments().Select(c => c.ToCommentInfo()));
     history.AddRange(Model.Attachments().Select(c => c.ToAttachmentInfo()));
     history.AddRange(Model.CardTransitions().Select(c => c.ToCardTransitionInfo()));
     history.SortDescending(a => a.CreationDate);
+
+    var notifications = Model.MyUnreadNotifications().Where(a => NotificationAttendedIn.CardHistory.Contains(a.Type)).ToList().OrderBy(a => a.CreationDate).ToList();
+    if (notifications.Any())
+    {
+        Model.MyUnreadNotifications().Where(a => NotificationAttendedIn.CardHistory.Contains(a.Type)).UnsafeUpdate().Set(a => a.ReadOn, a => TimeZoneManager.Now).Execute();
+    }
 }
 
 @if (history.Any())
@@ -18,9 +24,11 @@
     <div class="history-list">
         @foreach (var hi in history)
         {
-            <div class="history-item">
+            var notif = notifications.Any(n => n.TriggeredBy.Is(hi.User) && n.CreationDate == hi.CreationDate && n.Type == hi.NotificationType);
+
+            <div class="history-item @(notif ? "notification" : null)">
                 <div class="history-item-title">
-                    <span style="color:@(ChartColorLogic.ColorFor(hi.User).TryToHtml() ?? "gray")" class="history-user">@hi.User</span> <span title="@hi.CreationDate.ToString()">@hi.CreationDate.ToAgoString()</span> 
+                    <span style="color:@Agile.Web.AgileClient.HexColor(hi.User)" class="history-user">@hi.User</span> <span title="@hi.CreationDate.ToString()">@hi.CreationDate.ToAgoString()</span>
                     @if (hi is CardTransitionInfo)
                     {
                         @hi.ToString()
@@ -62,7 +70,7 @@
                     if (ai.Type == AttachmentType.Image)
                     {
                         <a href="@Url.Content(ai.File.FullWebPath)">
-                            <img src="@Url.Content(ai.File.FullWebPath)" style="width:100%"/>
+                            <img src="@Url.Content(ai.File.FullWebPath)" style="width:100%" />
                         </a>
                     }
                     else

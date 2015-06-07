@@ -22,7 +22,7 @@ namespace Agile.Logic
             {
                  Lite = list.ToLite(),
                  Name = list.Name,
-                 Subscription = list.SubscriptionMethod(),
+                 HasSubscription = list.HasSubscriptions(),
                  Cards = list.Cards().OrderBy(a=>a.Order).Select(c => c.ToCardInfo()).ToList(),
             }; 
         public static ListInfo ToListInfo(this ListEntity list)
@@ -36,7 +36,7 @@ namespace Agile.Logic
                 Lite = board.ToLite(),
                 Projects = board.Project,
                 Name = board.Name,
-                Subscription = board.SubscriptionMethod(),
+                HasSubscription = board.HasSubscriptions(),
                 Lists = board.MListElements(b => b.Lists).OrderBy(a => a.Order).Select(c => c.Element.Entity.ToListInfo()).ToList(),
             };
         public static BoardInfo ToBoardInfo(this BoardEntity board)
@@ -148,7 +148,7 @@ namespace Agile.Logic
     {
         public Lite<ListEntity> Lite;
         public string Name;
-        public SubscriptionMethod? Subscription;
+        public bool HasSubscription;
         public List<CardInfo> Cards;
     }
 
@@ -157,7 +157,7 @@ namespace Agile.Logic
         public Lite<BoardEntity> Lite;
         public Lite<ProjectEntity> Projects;
         public string Name;
-        public SubscriptionMethod? Subscription;
+        public bool HasSubscription;
         public List<ListInfo> Lists;
     }
 }

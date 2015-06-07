@@ -73,25 +73,28 @@ export function initCard(saveUrl: string, partialBoardUrl: string) {
 
         var eHtml = new Entities.EntityHtml("Card", Entities.RuntimeInfo.fromKey(liteKey));
 
-        Navigator.viewPopup(eHtml, { saveProtected: false }).then(html=> {
-            if (html && html.tryGetChild("State").length == 0) {
-                var formData = Validator.getFormValuesHtml(html, "prefix");
+        var canClose = (isOk: boolean) => {
+            if (!isOk)
+                return Promise.resolve(true);
 
-                formData["board"] = board.attr("data-board");
+            if (eHtml.prefix.child("State").tryGet().val() == "Alive") {
+
+                var formData = Validator.getFormValues(eHtml.prefix, "prefix");
 
                 return SF.ajaxPost({ url: saveUrl, data: formData })
-                    .then(bHtml=> {
-                    board.replaceWith($(bHtml));
-                });
-            }
-            else {
-                return SF.ajaxPost({ url: partialBoardUrl, data: { board: board.attr("data-board") } })
-                    .then(bHtml=> {
-                    board.replaceWith($(bHtml));
-                });
+                    .then(result => { Validator.assertModelStateErrors(result, eHtml.prefix); return true; })
+                    .catch(() => false);
             }
 
-        });;
+            return Promise.resolve(true);
+        };
+
+        Navigator.viewPopup(eHtml, { saveProtected: false, canClose: canClose }).then(html=> {
+            return SF.ajaxPost({ url: partialBoardUrl, data: { board: board.attr("data-board") } })
+                .then(bHtml=> {
+                board.replaceWith($(bHtml));
+            });
+        });
     });
 }
 

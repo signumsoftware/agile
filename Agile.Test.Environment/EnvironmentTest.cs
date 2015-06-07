@@ -45,7 +45,7 @@ namespace Agile.Test.Environment
                 {
                     var p = new ProjectEntity { Name = "Change the World" }.Execute(ProjectOperation.Save);
 
-                    var wontFix = p.ConstructFrom(TagOperation.CreteTagFromProject, "Won't fix", ColorEntity.FromRGBHex("#ff0000")).Execute(TagOperation.Save);
+                    var wontFix = p.ConstructFrom(TagOperation.CreateTagFromProject, "Won't fix", ColorEntity.FromRGBHex("#ff0000")).Execute(TagOperation.Save);
 
                     var todo = p.ConstructFrom(ListOperation.CreateListFromProject, "ToDo").Execute(ListOperation.Save);
                     var inProgress = p.ConstructFrom(ListOperation.CreateListFromProject, "In Progress").Execute(ListOperation.Save);

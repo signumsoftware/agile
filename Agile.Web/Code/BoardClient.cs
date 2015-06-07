@@ -34,6 +34,8 @@ namespace Agile.Web.Board
                 {
                     new EntityOperationSettings<BoardEntity>(BoardOperation.Archive){  Style = BootstrapStyle.Warning, HideOnCanExecute = true },
                     new EntityOperationSettings<BoardEntity>(BoardOperation.Unarchive){  Style = BootstrapStyle.Success, HideOnCanExecute = true },
+                    new EntityOperationSettings<ISubscriptionTarget>(SubscriptionOperation.Subscribe){  Style = BootstrapStyle.Info, HideOnCanExecute = true },
+                    new EntityOperationSettings<ISubscriptionTarget>(SubscriptionOperation.Unsubscribe){  Style = BootstrapStyle.Info, HideOnCanExecute = true },
                 });
             }
         }

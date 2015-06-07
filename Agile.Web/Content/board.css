@@ -104,3 +104,19 @@
     width: 100%;
     margin-bottom: 5px;
 }
+
+
+.card-members {
+    list-style: none;
+    padding: 0px;
+    float: right;
+}
+
+.card-member {
+    float: left;
+    padding: 0px 3px;
+    color:white;
+    border-radius: 4px;
+    margin-right: 2px;
+}
+

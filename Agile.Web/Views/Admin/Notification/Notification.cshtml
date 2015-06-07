@@ -4,6 +4,7 @@
 {
     @Html.ValueLine(nc, n => n.CreationDate)
     @Html.EntityLine(nc, n => n.User)
-    @Html.EntityLine(nc, n => n.Target)
-    @Html.ValueLine(nc, n => n.Attended)
+    @Html.EntityLine(nc, n => n.Card)
+    @Html.ValueLine(nc, n => n.Type)
+    @Html.ValueLine(nc, n => n.Message)
 }

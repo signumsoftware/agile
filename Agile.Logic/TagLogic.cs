@@ -50,7 +50,7 @@ namespace Agile.Logic
                     Execute = (t, _) => { }
                 }.Register();
 
-                new Graph<TagEntity>.ConstructFrom<ProjectEntity>(TagOperation.CreteTagFromProject)
+                new Graph<TagEntity>.ConstructFrom<ProjectEntity>(TagOperation.CreateTagFromProject)
                 {
                     Construct = (b, args) => new TagEntity 
                     { 

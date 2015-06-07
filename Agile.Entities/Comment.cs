@@ -66,5 +66,6 @@ namespace Agile.Entities
         commented,
         moved,
         attached,
+        created,
     }
 }

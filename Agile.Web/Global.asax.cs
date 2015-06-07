@@ -184,6 +184,8 @@ namespace Agile.Web
 
             SignumControllerFactory.EveryController().AddFilters(new ProfilerFilterAttribute());
 
+            SignumControllerFactory.RegisterAvoidValidate();
+
             Navigator.Initialize();
 
             OmniboxClient.Start();

@@ -127,3 +127,17 @@ span.history-transition {
   padding: 10px;
   color: rgb(118, 103, 45);
 }
+
+.notification {
+    box-shadow: 0px 0px 5px 1px #FF9B00;
+}
+
+.card-left fieldset
+{
+   padding: 5px;
+   margin: 0px;
+}
+
+.card-left .sf-strip-input input{
+    width:100px;
+}

@@ -24,6 +24,7 @@ namespace Agile.Test.Environment
             var roles = Database.Query<RoleEntity>().ToDictionary(a => a.Name);
 
             CreateUser("Super", roles.GetOrThrow("Super user"));
+            CreateUser("Super2", roles.GetOrThrow("Super user"));
             CreateUser("Advanced", roles.GetOrThrow("Advanced user"));
             CreateUser("Normal", roles.GetOrThrow("User"));
         }

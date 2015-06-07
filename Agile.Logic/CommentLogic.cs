@@ -60,7 +60,15 @@ namespace Agile.Logic
                 {
                     AllowsNew = true,
                     Lite = false,
-                    Execute = (c, _) => { }
+                    Execute = (c, _) => 
+                    {
+                        if (c.IsNew)
+                        {
+                            NotificationLogic.Notify(c.Card.Retrieve(), NotificationType.Commented,
+                                () => NotificationMessage.Commented.NiceToString() + c.Text.Etc(200),
+                                overrideCreationDate: c.CreationDate);
+                        }
+                    }
                 }.Register();
 
                 new Graph<CommentEntity>.Delete(CommentOperation.Delete)
@@ -81,12 +89,34 @@ namespace Agile.Logic
         {
             return HistoryMessage.commented.NiceToString();
         }
+
+        public override NotificationType NotificationType
+        {
+            get { return NotificationType.Commented; }
+        }
     }
 
-    public class HistoryInfo 
+    public abstract class HistoryInfo 
     {
         public Lite<Entity> Entity;
         public Lite<UserEntity> User;
         public DateTime CreationDate;
+
+        public abstract NotificationType NotificationType { get; }
     }
+
+    public class CardCreatedInfo : HistoryInfo
+    {
+        public override string ToString()
+        {
+            return HistoryMessage.created.NiceToString();
+        }
+
+        public override NotificationType NotificationType
+        {
+            get { return NotificationType.Created; }
+        }
+    }
+
+
 }

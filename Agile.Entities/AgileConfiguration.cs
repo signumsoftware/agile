@@ -6,6 +6,7 @@ using Signum.Entities;
 using Signum.Entities.Basics;
 using Signum.Entities.Mailing;
 using Signum.Entities.SMS;
+using Signum.Entities.Scheduler;
 
 namespace Agile.Entities
 {
@@ -80,6 +81,11 @@ namespace Agile.Entities
         public static TypeConditionSymbol UserEntities = new TypeConditionSymbol();
         public static TypeConditionSymbol RoleEntities = new TypeConditionSymbol();
         public static TypeConditionSymbol MyProjects = new TypeConditionSymbol();
+    }
+
+    public static class AgileTasks
+    {
+        public static SimpleTaskSymbol SendNotificationDigests = new SimpleTaskSymbol();
     }
 
 }

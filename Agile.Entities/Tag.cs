@@ -50,6 +50,6 @@ namespace Agile.Entities
     public static class TagOperation
     {
         public static readonly ExecuteSymbol<TagEntity> Save = OperationSymbol.Execute<TagEntity>();
-        public static readonly ConstructSymbol<TagEntity>.From<ProjectEntity> CreteTagFromProject = OperationSymbol.Construct<TagEntity>.From<ProjectEntity>();
+        public static readonly ConstructSymbol<TagEntity>.From<ProjectEntity> CreateTagFromProject = OperationSymbol.Construct<TagEntity>.From<ProjectEntity>();
     }
 }

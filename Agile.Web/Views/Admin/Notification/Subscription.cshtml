@@ -3,6 +3,5 @@
 @using (var sc = Html.TypeContext<SubscriptionEntity>())
 {
     @Html.EntityLine(sc, s => s.User)
-    @Html.ValueLine(sc, s => s.Method)
     @Html.EntityLine(sc, s => s.Target)
 }
